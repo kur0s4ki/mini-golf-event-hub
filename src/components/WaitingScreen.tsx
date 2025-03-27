@@ -9,8 +9,8 @@ interface WaitingScreenProps {
 const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
   return (
     <div className={`flex items-center justify-center h-full w-full ${className}`}>
-      {/* Main container with teal background - full width and height of viewport */}
-      <div className="fixed inset-0 bg-[#2A9D8F] flex flex-col items-center justify-center p-8">
+      {/* Main container with gradient teal background - full width and height of viewport */}
+      <div className="fixed inset-0 bg-gradient-to-br from-[#3db4a4] via-[#2A9D8F] to-[#26887c] flex flex-col items-center justify-center p-8">
         
         {/* Center content with purple background image and orange border */}
         <div className="relative max-w-3xl w-full rounded-xl border-4 border-[#F4A261] p-6 flex flex-col items-center justify-center overflow-hidden">

@@ -9,7 +9,7 @@ interface WaitingScreenProps {
 const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
   return (
     <div className={`flex items-center justify-center h-full w-full ${className}`}>
-      {/* Main container with teal background */}
+      {/* Main container with teal background - full width */}
       <div className="w-full h-full bg-[#2A9D8F] p-8 flex flex-col items-center justify-center">
         
         {/* Center content with purple background and orange border */}
@@ -22,16 +22,18 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
           </div>
           
           {/* Logo and title */}
-          <div className="relative z-10 mb-8 text-center">
+          <div className="relative z-10 mb-16 text-center">
             <img 
               src="public/lovable-uploads/7e00f181-d0bd-4c84-b12c-5c19af1ec00f.png" 
               alt="The MIND golf" 
               className="w-full max-w-md mx-auto"
             />
           </div>
-          
-          {/* Touch to begin button */}
-          <button className="relative z-10 px-12 py-3 text-2xl font-bold text-[#F4A261] bg-[#2A9D8F] rounded-full border-4 border-[#F4A261] shadow-lg transform transition-transform hover:scale-105 mb-4">
+        </div>
+
+        {/* Touch to begin button - positioned to be half in and half out of the purple box */}
+        <div className="relative z-20 -mt-12">
+          <button className="px-16 py-4 text-2xl font-bold text-[#F4A261] bg-[#2A9D8F] rounded-full border-4 border-[#F4A261] shadow-lg transform transition-transform hover:scale-105">
             TOUCH TO BEGIN
           </button>
         </div>

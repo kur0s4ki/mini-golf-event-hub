@@ -90,7 +90,7 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                 </div>
 
                 {/* Center content with purple background image and orange border */}
-                <div className="relative max-w-5xl w-full min-h-[600px] rounded-xl border-4 border-[#F4A261] p-6 flex flex-col items-center justify-center overflow-hidden backdrop-blur-sm bg-white/5">
+                <div className="relative max-w-3xl w-full min-h-[400px] rounded-xl border-4 border-[#D8724D] p-6 flex flex-col items-center justify-center overflow-hidden backdrop-blur-sm bg-white/5 shadow-[0_0_15px_rgba(216,114,77,0.1)]">
                     {/* Background image */}
                     <div
                         className="absolute inset-0 w-full h-full bg-cover bg-center opacity-50"
@@ -103,8 +103,8 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                             <img
                                 src="/images/logo.png"
                                 alt="The MIND golf"
-                                className="w-[500px] h-auto object-contain drop-shadow-lg"
-                                style={{ filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.25))' }}
+                                className="w-[300px] h-auto object-contain"
+                                style={{ filter: 'drop-shadow(0px 4px 8px rgba(216, 114, 77, 0.2))' }}
                             />
                         </div>
                     </div>
@@ -114,27 +114,27 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                 <div className="relative z-20 -mt-12">
                     <button
                         onClick={handleStartClick}
-                        className="group relative px-16 py-6 text-2xl font-bold text-[#F4A261] bg-[#2A9D8F] rounded-full border-4 border-[#F4A261] shadow-[0_8px_0_rgb(244,162,97,0.5)] transform transition-all duration-150 hover:shadow-[0_4px_0_rgb(244,162,97,0.5)] hover:translate-y-1 active:shadow-none active:translate-y-2"
+                        className="group relative px-16 py-6 text-2xl font-bold text-[#D8724D] bg-[#2A9D8F] rounded-full border-4 border-[#D8724D] shadow-[0_8px_0_rgba(216,114,77,0.5)] transform transition-all duration-150 hover:shadow-[0_4px_0_rgba(216,114,77,0.5)] hover:translate-y-1 active:shadow-none active:translate-y-2 hover:bg-[#238477]"
                     >
                         <span className="inline-block font-badtyp text-4xl tracking-[0.15em] leading-none">
                             TOUCH TO BEGIN
                         </span>
-                        <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white/10" />
+                        <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-[#D8724D]/5" />
                     </button>
                 </div>
 
                 {/* Footer with language selector */}
                 <div className="absolute bottom-8 left-8">
-                    <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full p-3 border-2 border-[#F4A261] transition-all hover:bg-white/30">
-                        <Globe size={24} className="text-[#F4A261]" />
+                    <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full p-3 border-2 border-[#D8724D] transition-all duration-200 hover:bg-[#D8724D]/10">
+                        <Globe size={24} className="text-[#D8724D]" />
                         <span className="text-white font-medium">EN</span>
                     </div>
                 </div>
 
                 {/* Help button */}
                 <div className="absolute bottom-8 right-8">
-                    <div className="w-12 h-12 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full border-2 border-[#F4A261] transition-all hover:bg-white/30">
-                        <span className="text-[#F4A261] font-bold text-xl">?</span>
+                    <div className="w-12 h-12 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full border-2 border-[#D8724D] transition-all duration-200 hover:bg-[#D8724D]/10">
+                        <span className="text-[#D8724D] font-bold text-xl">?</span>
                     </div>
                 </div>
             </div>

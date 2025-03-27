@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "BadTyp";
+  src: url("/fonts/BadTyp.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 47.4% 11.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 93.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply h-full antialiased;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes floatStick {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(var(--rotation));
+    opacity: var(--base-opacity);
+    filter: brightness(1) blur(0px);
+  }
+  33% {
+    transform: translate(var(--float-x), var(--float-y))
+      rotate(calc(var(--rotation) - 2deg));
+    opacity: calc(var(--base-opacity) * 1.2);
+    filter: brightness(1.3) blur(0.5px);
+  }
+  66% {
+    transform: translate(
+        calc(var(--float-x) * -0.5),
+        calc(var(--float-y) * -0.5)
+      )
+      rotate(calc(var(--rotation) + 2deg));
+    opacity: calc(var(--base-opacity) * 0.8);
+    filter: brightness(0.9) blur(1px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm;
+  }
+
+  .glass-panel {
+    @apply bg-white/70 backdrop-blur-lg border border-white/40 shadow-md;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .stick {
+    animation: floatStick 10s ease-in-out infinite;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity, filter;
+    --base-opacity: var(--initial-opacity, 0.1);
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+
+  .stick img {
+    filter: brightness(1.5) contrast(0.8);
+    transform: translateZ(0);
+  }
+
+  .font-badtyp {
+    font-family: "BadTyp", sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gpu {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}

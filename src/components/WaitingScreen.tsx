@@ -9,16 +9,18 @@ interface WaitingScreenProps {
 const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
   return (
     <div className={`flex items-center justify-center h-full w-full ${className}`}>
-      {/* Main container with teal background - full width */}
-      <div className="w-full h-full bg-[#2A9D8F] p-8 flex flex-col items-center justify-center">
+      {/* Main container with teal background - full width and height of viewport */}
+      <div className="fixed inset-0 bg-[#2A9D8F] flex flex-col items-center justify-center p-8">
         
-        {/* Center content with purple background and orange border */}
-        <div className="relative max-w-3xl w-full rounded-xl bg-[#4A1D96] border-4 border-[#F4A261] p-6 flex flex-col items-center justify-center">
-          {/* Background pattern - golf clubs and circles */}
-          <div className="absolute inset-0 w-full h-full overflow-hidden rounded-lg">
-            <div className="w-full h-full opacity-10 bg-repeat" style={{ 
-              backgroundImage: "url('public/lovable-uploads/70ede128-d779-4064-b320-65c7f9359c1b.png')" 
-            }}></div>
+        {/* Center content with purple background image and orange border */}
+        <div className="relative max-w-3xl w-full rounded-xl border-4 border-[#F4A261] p-6 flex flex-col items-center justify-center overflow-hidden">
+          {/* Background image */}
+          <div className="absolute inset-0 w-full h-full">
+            <img 
+              src="public/lovable-uploads/70578374-a208-4dee-9566-0841fe903885.png" 
+              alt="Background pattern" 
+              className="w-full h-full object-cover"
+            />
           </div>
           
           {/* Logo and title */}

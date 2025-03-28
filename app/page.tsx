@@ -2,18 +2,19 @@
 
 import React, { useEffect, useState } from "react"
 import WaitingScreen from "@/components/waiting-screen"
-import GameScreen from "@/components/game-screen"
+import GameInProgress from "@/components/game-in-progress"
 import WinScreen from "@/components/win-screen"
+import LossScreen from "@/components/loss-screen"
+import TimeUpScreen from "@/components/time-up-screen"
 import { gameEvents } from "@/lib/eventEmitter"
 import wsClient from "@/lib/websocket"
 import { PlayerInfo, GameState } from "@/types"
-import { toast } from "sonner"
 
 export default function Home() {
     const [gameState, setGameState] = useState<GameState>("waiting")
     const [playerName, setPlayerName] = useState<string>("")
     const [teamName, setTeamName] = useState<string>("")
-    const [timerSeconds, setTimerSeconds] = useState<number>(300)
+    const [timerSeconds, setTimerSeconds] = useState<number>(20)
     const [points, setPoints] = useState<number>(0)
 
     useEffect(() => {
@@ -34,7 +35,7 @@ export default function Home() {
             // Update state
             setPlayerName(player.displayName)
             setTeamName(player.team.name)
-            setTimerSeconds(300) // Fixed at 300 seconds
+            setTimerSeconds(20)
             setGameState("playing")
 
             // Send WebSocket message
@@ -42,11 +43,7 @@ export default function Home() {
                 action: "start",
                 teamName: player.team.name,
                 playerDisplayName: player.displayName,
-                timer: 300
-            })
-
-            toast.success("Game started!", {
-                description: `Welcome ${player.displayName} from team ${player.team.name}`,
+                timer: 20
             })
         }
 
@@ -62,9 +59,33 @@ export default function Home() {
                 action: "win",
                 points: points
             })
+        }
 
-            toast.success("Congratulations!", {
-                description: `You've earned ${points} points!`,
+        const handleLoss = (points: number) => {
+            console.log("Game lost with points:", points)
+
+            // Update state
+            setPoints(points)
+            setGameState("lost")
+
+            // Send WebSocket message
+            wsClient.sendMessage({
+                action: "loss",
+                points: points
+            })
+        }
+
+        const handleTimeUp = (points: number) => {
+            console.log("Time's up with points:", points)
+
+            // Update state
+            setPoints(points)
+            setGameState("timeUp")
+
+            // Send WebSocket message
+            wsClient.sendMessage({
+                action: "timeUp",
+                points: points
             })
         }
 
@@ -81,21 +102,21 @@ export default function Home() {
             wsClient.sendMessage({
                 action: "reset"
             })
-
-            toast.info("Game reset", {
-                description: "Ready for a new game!",
-            })
         }
 
         // Register event handlers
         gameEvents.on("start", handleStart)
         gameEvents.on("win", handleWin)
+        gameEvents.on("loss", handleLoss)
+        gameEvents.on("timeUp", handleTimeUp)
         gameEvents.on("reset", handleReset)
 
         // Cleanup event handlers when component unmounts
         return () => {
             gameEvents.off("start", handleStart)
             gameEvents.off("win", handleWin)
+            gameEvents.off("loss", handleLoss)
+            gameEvents.off("timeUp", handleTimeUp)
             gameEvents.off("reset", handleReset)
         }
     }, [])
@@ -116,11 +137,19 @@ export default function Home() {
                 gameEvents.emit("win", pts)
             }
 
+            (window as any).testLoss = (pts = 350) => {
+                gameEvents.emit("loss", pts)
+            }
+
+            (window as any).testTimeUp = (pts = 100) => {
+                gameEvents.emit("timeUp", pts)
+            }
+
             (window as any).testReset = () => {
                 gameEvents.emit("reset", null)
             }
 
-            console.log("Debug functions available: window.testStart(), window.testWin(points), window.testReset()")
+            console.log("Debug functions available: window.testStart(), window.testWin(points), window.testLoss(points), window.testTimeUp(points), window.testReset()")
         }
     }, [])
 
@@ -129,17 +158,29 @@ export default function Home() {
             {gameState === "waiting" && (
                 <WaitingScreen />
             )}
-
             {gameState === "playing" && (
-                <GameScreen
-                    timerSeconds={timerSeconds}
+                <GameInProgress initialTime={timerSeconds} />
+            )}
+            {gameState === "won" && (
+                <WinScreen 
+                    points={points}
                     playerName={playerName}
                     teamName={teamName}
                 />
             )}
-
-            {gameState === "won" && (
-                <WinScreen points={points} />
+            {gameState === "lost" && (
+                <LossScreen 
+                    points={points}
+                    playerName={playerName}
+                    teamName={teamName}
+                />
+            )}
+            {gameState === "timeUp" && (
+                <TimeUpScreen 
+                    points={points}
+                    playerName={playerName}
+                    teamName={teamName}
+                />
             )}
         </div>
     )

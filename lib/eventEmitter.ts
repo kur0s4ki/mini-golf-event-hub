@@ -3,6 +3,8 @@ import { PlayerInfo } from "@/types";
 type EventsMap = {
   start: PlayerInfo;
   win: number;
+  loss: number;
+  timeUp: number;
   reset: null;
 };
 

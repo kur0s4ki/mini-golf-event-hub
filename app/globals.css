@@ -86,6 +86,43 @@
   }
 }
 
+@keyframes zoom-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-15px);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
 @keyframes floatStick {
   0%,
   100% {
@@ -122,6 +159,129 @@
   }
 }
 
+@keyframes raindrop-fall {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(150vh);
+    opacity: 0.3;
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-6px) scale(1.02);
+    box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+  }
+}
+
+@keyframes flash {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes sand-fall {
+  0% {
+    transform: translateY(-30vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  60%, 80% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(150vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes sand-fall-top {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(40px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes sand-funnel {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(40px) scale(0.6);
+    opacity: 0.4;
+  }
+}
+
+@keyframes sand-decrease {
+  0%, 5% {
+    d: path('M25 15H75V40C75 55 60 60 50 65C40 60 25 55 25 40V15Z');
+    opacity: 0.7;
+  }
+  95%, 100% {
+    d: path('M25 15H75V30C75 35 60 40 50 45C40 40 25 35 25 30V15Z');
+    opacity: 0.5;
+  }
+}
+
+@keyframes sand-increase {
+  0%, 5% {
+    d: path('M25 145L25 125C25 120 35 115 50 110C65 115 75 120 75 125V145H25Z');
+    opacity: 0.7;
+  }
+  95%, 100% {
+    d: path('M25 145L25 115C25 105 35 100 50 95C65 100 75 105 75 115V145H25Z');
+    opacity: 0.9;
+  }
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @layer components {
   .glass-card {
     @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm;
@@ -135,8 +295,32 @@
     animation: float 3s ease-in-out infinite;
   }
 
+  .animate-zoom {
+    animation: zoom-pulse 3s ease-in-out infinite;
+  }
+
   .animate-pulse-slow {
     animation: pulse 2s ease-in-out infinite;
+  }
+
+  .animate-confetti {
+    animation: confetti-fall 3s linear infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 3s ease-in-out infinite;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    background-color: #FFF;
+    animation: confetti-fall 5s linear infinite;
+    opacity: 1;
+    z-index: 10;
+    transform-origin: center;
   }
 
   .stick {
@@ -156,6 +340,58 @@
 
   .font-badtyp {
     font-family: "BadTyp", sans-serif;
+  }
+
+  .raindrop {
+    position: absolute;
+    top: -20px;
+    background-color: #94A3B8;
+    border-radius: 0 0 2px 2px;
+    animation: raindrop-fall 2s linear infinite;
+    opacity: 0.7;
+    z-index: 5;
+    transform-origin: center top;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  .animate-heartbeat {
+    animation: heartbeat 0.6s ease-in-out infinite;
+  }
+
+  .animate-shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite;
+  }
+
+  .animate-flash {
+    animation: flash 0.8s ease-in-out infinite;
+  }
+
+  .sand-particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: sand-fall 8s ease-in infinite;
+    z-index: 5;
+    box-shadow: 0 0 3px rgba(255, 209, 102, 0.3);
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
+
+  .animate-sand-fall-top {
+    animation: sand-fall-top 1.5s ease-in infinite;
+  }
+  
+  .animate-sand-funnel {
+    animation: sand-funnel 1s ease-in infinite;
+  }
+  
+  .animate-sand-decrease {
+    animation: sand-decrease 10s ease-in-out infinite;
+  }
+  
+  .animate-sand-increase {
+    animation: sand-increase 10s ease-in-out infinite;
   }
 }
 

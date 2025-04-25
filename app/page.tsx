@@ -6,6 +6,7 @@ import GameInProgress from "@/components/game-in-progress"
 import WinScreen from "@/components/win-screen"
 import LossScreen from "@/components/loss-screen"
 import TimeUpScreen from "@/components/time-up-screen"
+import KeyboardSimulator from "@/components/keyboard-simulator"
 import { gameEvents } from "@/lib/eventEmitter"
 import wsClient from "@/lib/websocket"
 import { PlayerInfo, GameState } from "@/types"
@@ -182,6 +183,11 @@ export default function Home() {
                     teamName={teamName}
                 />
             )}
+            
+            {/* Keyboard simulator for development */}
+            {/* {process.env.NODE_ENV === 'development' && (
+                <KeyboardSimulator />
+            )} */}
         </div>
     )
 }

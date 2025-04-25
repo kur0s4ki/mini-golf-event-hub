@@ -1,0 +1,155 @@
+const WebSocket = require('ws');
+const readline = require('readline');
+
+// Create a WebSocket server on port 8080
+const wss = new WebSocket.Server({ port: 8080 });
+
+// Keep track of all connected clients
+const clients = new Set();
+
+// Handle new connections
+wss.on('connection', (ws) => {
+  console.log('New client connected!');
+  
+  // Add this client to our set
+  clients.add(ws);
+  
+  // Send welcome message
+  ws.send(JSON.stringify({
+    type: 'info',
+    message: 'Connected to game simulation server'
+  }));
+
+  // Handle messages from this client
+  ws.on('message', (messageData) => {
+    try {
+      const message = JSON.parse(messageData);
+      console.log('Received:', message);
+      
+      // Broadcast the message to all connected clients (including the sender)
+      broadcastMessage(message);
+      
+    } catch (error) {
+      console.error('Error parsing message:', error);
+      ws.send(JSON.stringify({
+        type: 'error',
+        message: 'Invalid message format'
+      }));
+    }
+  });
+
+  // Handle disconnection
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    clients.delete(ws);
+  });
+});
+
+// Function to broadcast a message to all connected clients
+function broadcastMessage(message) {
+  clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
+}
+
+// Setup command-line interface
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+// Command handler function
+function handleCommand() {
+  rl.question('\nEnter command (start, win, loss, timeUp, reset, bonus, help, exit): ', (cmd) => {
+    const command = cmd.trim().toLowerCase();
+    
+    if (command === 'exit') {
+      console.log('Closing server...');
+      rl.close();
+      wss.close();
+      process.exit(0);
+    } else if (command === 'help') {
+      showHelp();
+      handleCommand();
+    } else if (['start', 'win', 'loss', 'timeup', 'reset', 'bonus'].includes(command)) {
+      processGameCommand(command);
+    } else {
+      console.log('Unknown command. Type "help" for available commands.');
+      handleCommand();
+    }
+  });
+}
+
+// Display available commands and their descriptions
+function showHelp() {
+  console.log('\n--- Available Commands ---');
+  console.log('start  : Start a new game with player information');
+  console.log('win    : Trigger win screen (with optional points)');
+  console.log('loss   : Trigger loss screen (with optional points)');
+  console.log('timeup : Trigger time\'s up screen (with optional points)');
+  console.log('bonus  : Show +500 points bonus animation');
+  console.log('reset  : Reset game to waiting screen');
+  console.log('help   : Show this help message');
+  console.log('exit   : Close the server and exit');
+  console.log('------------------------\n');
+}
+
+// Process game-related commands
+function processGameCommand(command) {
+  switch (command) {
+    case 'start':
+      rl.question('Enter player name: ', (playerName) => {
+        rl.question('Enter team name: ', (teamName) => {
+          const message = {
+            action: 'start',
+            playerDisplayName: playerName || 'Player 1',
+            teamName: teamName || 'Team Awesome'
+          };
+          broadcastMessage(message);
+          console.log('Game started for:', playerName);
+          handleCommand();
+        });
+      });
+      break;
+      
+    case 'win':
+    case 'loss':
+    case 'timeup':
+      rl.question('Enter points (default: 1000): ', (pointsStr) => {
+        const points = parseInt(pointsStr) || 1000;
+        let action = command;
+        if (command === 'timeup') action = 'timeUp'; // Fix casing for timeUp
+        
+        const message = {
+          action: action,
+          points: points
+        };
+        broadcastMessage(message);
+        console.log(`Triggered ${action} with ${points} points`);
+        handleCommand();
+      });
+      break;
+      
+    case 'bonus':
+      const message = {
+        action: 'custom',
+        command: 'bonus'
+      };
+      broadcastMessage(message);
+      console.log('Bonus animation triggered');
+      handleCommand();
+      break;
+      
+    case 'reset':
+      broadcastMessage({ action: 'reset' });
+      console.log('Game reset to waiting screen');
+      handleCommand();
+      break;
+  }
+}
+
+console.log('WebSocket server started on port 8080');
+console.log('Command interface ready. Type "help" for available commands.');
+handleCommand(); 

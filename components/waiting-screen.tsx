@@ -19,6 +19,8 @@ interface BackgroundElement {
 
 const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
     const [bgElements, setBgElements] = useState<BackgroundElement[]>([]);
+    const [showLangPopup, setShowLangPopup] = useState(false);
+    const [selectedLang, setSelectedLang] = useState('EN');
 
     useEffect(() => {
         // Generate static background elements only on the client side
@@ -65,7 +67,9 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
             {/* Main container - full width and height of viewport */}
             <div className="fixed inset-0 flex flex-col items-center justify-center p-0 overflow-hidden">
                 {/* Background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#6B43A9] from-10% via-[#4B2A82] via-40% to-[#371F6A] to-90%" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#229954] via-[#7CB518] to-[#C9E265]" />
+                {/* Overlay for better contrast */}
+                <div className="absolute inset-0 bg-black/30" />
                 
                 {/* Background decorative elements */}
                 <div className="absolute inset-0 overflow-hidden">
@@ -104,20 +108,14 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                     {/* MIND Golf logo */}
                     <div className="absolute right-8 top-6">
                         <div className="font-badtyp text-4xl text-[#26A69A]">
-                            <span className="text-white">The</span> MIND <span className="text-white">golf</span>
+                            <span className="text-white"></span> MINI <span className="text-white">Golf</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Center content */}
                 <div className="relative flex-1 w-full max-w-5xl mx-auto z-10 flex flex-col items-center justify-center p-8">
-                    <div className="w-full rounded-3xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-8 flex flex-col items-center relative overflow-hidden">
-                        {/* Background image for the card */}
-                        <div
-                            className="absolute inset-0 w-full h-full bg-cover bg-center"
-                            style={{ backgroundImage: "url('/images/bg.png')" }}
-                        />
-                        
+                    <div className="w-full rounded-3xl p-8 flex flex-col items-center relative overflow-hidden">
                         {/* Content with relative positioning to sit above background */}
                         <div className="relative z-10 mb-16 flex items-center justify-center w-full">
                             <div className="animate-zoom">
@@ -136,22 +134,44 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                 <div className="relative z-20 -mt-12 mb-16">
                     <button
                         onClick={handleStartClick}
-                        className="bg-[#26A69A] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all"
+                        className="bg-[#229954] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all"
                     >
-                        BADGE TO BEGIN
+                        Place ta balle sur la zone violette pour démarrer la partie !
                     </button>
                 </div>
 
                 {/* Footer navigation */}
                 <div className="relative w-full py-8 px-8 z-20 flex justify-between items-center">
                     {/* Language selector */}
-                    <button className="bg-[#26A69A] p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all flex items-center gap-2">
+                    <button className="bg-[#229954] p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all flex items-center gap-2" onClick={() => setShowLangPopup(true)}>
                         <Globe className="w-6 h-6 text-white" />
-                        <span className="text-white font-badtyp text-xl">EN</span>
+                        <span className="text-white font-badtyp text-xl">{selectedLang}</span>
                     </button>
+                    {showLangPopup && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowLangPopup(false)}>
+                            <div className="bg-white rounded-3xl border-4 border-[#229954] shadow-lg p-8 flex flex-col items-center min-w-[300px]" onClick={e => e.stopPropagation()}>
+                                <span className="font-badtyp text-3xl mb-6 text-[#229954]">Select Language</span>
+                                <button
+                                    className="w-full mb-3 bg-[#229954] text-white font-badtyp text-2xl px-8 py-3 rounded-xl border-4 border-white shadow-md hover:bg-[#1b7a3a] transition-all flex items-center gap-3 justify-center"
+                                    onClick={() => { setSelectedLang('EN'); setShowLangPopup(false); }}
+                                >
+                                    <img src="/images/flags/en.png" alt="English flag" className="w-6 h-6 rounded-full object-cover" />
+                                    English
+                                </button>
+                                <button
+                                    className="w-full mb-3 bg-[#229954] text-white font-badtyp text-2xl px-8 py-3 rounded-xl border-4 border-white shadow-md hover:bg-[#1b7a3a] transition-all flex items-center gap-3 justify-center"
+                                    onClick={() => { setSelectedLang('FR'); setShowLangPopup(false); }}
+                                >
+                                    <img src="/images/flags/fr.png" alt="French flag" className="w-6 h-6 rounded-full object-cover" />
+                                    Français
+                                </button>
+                                {/* Add more languages here if needed */}
+                            </div>
+                        </div>
+                    )}
                     
                     {/* Help button */}
-                    <button className="bg-[#26A69A] p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all">
+                    <button className="bg-[#229954] p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all">
                         <span className="text-white font-badtyp text-2xl">?</span>
                     </button>
                 </div>

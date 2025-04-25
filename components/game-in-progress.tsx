@@ -1,12 +1,21 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { Home, Globe, Gift, Star, Plus, Gem } from "lucide-react"
+import { Home, Globe, Gift, Star, Plus, Gem, Flag, Trophy, Target } from "lucide-react"
 import { gameEvents } from "@/lib/eventEmitter"
 
 interface GameInProgressProps {
     className?: string
     initialTime?: number
+}
+
+interface BackgroundElement {
+    top: string
+    left: string
+    size: string
+    rotation: string
+    opacity: number
+    type: 'ball' | 'flag' | 'trophy' | 'target'
 }
 
 const GameInProgress: React.FC<GameInProgressProps> = ({ 
@@ -18,6 +27,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     const [totalScore, setTotalScore] = useState(0)
     const [bonusScale, setBonusScale] = useState(0)
     const [bonusCountdown, setBonusCountdown] = useState(5)
+    const [bgElements, setBgElements] = useState<BackgroundElement[]>([]);
     
     useEffect(() => {
         const timer = setInterval(() => {
@@ -35,6 +45,33 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
         
         return () => clearInterval(timer);
     }, [totalScore]);
+    
+    useEffect(() => {
+        // Generate static background elements only on the client side
+        const elements = Array.from({ length: 40 }, (_, index) => {
+            // Distribute elements across the screen
+            const top = `${Math.random() * 100}%`
+            const left = `${Math.random() * 100}%`
+            // Randomize sizes but keep them small
+            const size = `${1 + Math.random() * 1.5}rem`
+            // Random rotation
+            const rotation = `${Math.random() * 360}deg`
+            // Random opacity but keep them subtle
+            const opacity = 0.03 + Math.random() * 0.12
+            // Select icon type
+            const typeIndex = Math.floor(Math.random() * 4)
+            const types = ['ball', 'flag', 'trophy', 'target'] as const
+            return {
+                top,
+                left,
+                size,
+                rotation,
+                opacity,
+                type: types[typeIndex]
+            }
+        });
+        setBgElements(elements);
+    }, []);
     
     // Bonus animation effect
     useEffect(() => {
@@ -119,23 +156,55 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
         top: `${Math.random() * 200 - 50}%`,
         left: `${Math.random() * 200 - 50}%`,
         size: `${3 + Math.random() * 10}px`,
-        color: Math.random() > 0.5 ? '#FFD166' : '#26A69A',
+        color: Math.random() > 0.5 ? '#FFD166' : '#229954',
         animationDuration: `${0.5 + Math.random()}s`,
         animationDelay: `${Math.random() * 5}s`
     }));
 
     return (
-        <div className={`flex items-center justify-center h-full w-full ${className}`}>
+        <div 
+            className={`flex items-center justify-center h-full w-full ${className}`}
+            data-bonus-trigger
+        >
             {/* Main container - full width and height of viewport */}
             <div className="fixed inset-0 flex flex-col items-center justify-between p-0 overflow-hidden">
                 {/* Background base color */}
                 <div className="absolute inset-0 bg-[#6B43A9]" />
                 
-                {/* Background image */}
-                <div
-                    className="absolute inset-0 w-full h-full bg-cover bg-center opacity-80"
-                    style={{ backgroundImage: "url('/images/bg2.png')" }}
-                />
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#229954] via-[#7CB518] to-[#C9E265]" />
+                
+                {/* Background decorative elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    {bgElements.map((element, index) => (
+                        <div
+                            key={index}
+                            className="absolute"
+                            style={{
+                                top: element.top,
+                                left: element.left,
+                                transform: `rotate(${element.rotation})`,
+                                opacity: element.opacity,
+                            }}
+                        >
+                            {element.type === 'ball' && (
+                                <div className="rounded-full bg-white" style={{ width: element.size, height: element.size }}></div>
+                            )}
+                            {element.type === 'flag' && (
+                                <Flag className="text-white" style={{ width: element.size, height: element.size }} />
+                            )}
+                            {element.type === 'trophy' && (
+                                <Trophy className="text-white" style={{ width: element.size, height: element.size }} />
+                            )}
+                            {element.type === 'target' && (
+                                <Target className="text-white" style={{ width: element.size, height: element.size }} />
+                            )}
+                        </div>
+                    ))}
+                </div>
+                
+                {/* Overlay for better contrast */}
+                <div className="absolute inset-0 bg-black/30" />
                 
                 {/* Top navigation bar */}
                 <div className="relative w-full py-5 px-8 z-20 flex justify-between items-center">
@@ -147,7 +216,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                             shadow-[0_6px_0_rgba(0,0,0,0.2)] 
                             flex items-center justify-center 
                             transition-all duration-300
-                            ${isCritical ? 'bg-red-600' : isTimeLow ? 'bg-[#E76F51]' : 'bg-[#26A69A]'} 
+                            ${isCritical ? 'bg-red-600' : isTimeLow ? 'bg-[#E76F51]' : 'bg-[#229954]'} 
                             ${isCritical ? 'animate-shake' : isTimeLow ? 'animate-heartbeat' : ''}
                         `}
                     >
@@ -163,8 +232,8 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                     
                     {/* Score display */}
                     <div className="absolute right-8 top-6 flex flex-col items-end">
-                        <div className="font-badtyp text-4xl text-[#26A69A]">
-                            <span className="text-white">The</span> MIND <span className="text-white">golf</span>
+                        <div className="font-badtyp text-4xl text-[#229954]">
+                            <span className="text-white"></span> MINI <span className="text-white">golf</span>
                         </div>
                     </div>
                 </div>
@@ -173,7 +242,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                 <div className="relative flex-1 w-full max-w-4xl mx-auto z-10 flex flex-col items-center justify-center p-8">
                     {!showBonus && (
                         <div className="w-full bg-[#6B43A9] rounded-3xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-8 flex flex-col items-center">
-                            <h1 className="text-[#26A69A] font-badtyp text-5xl mb-3">STRIKE CLOWN</h1>
+                            <h1 className="text-[#229954] font-badtyp text-5xl mb-3">STRIKE CLOWN</h1>
                             <p className="text-white font-badtyp text-2xl mb-5">LET'S PLAY WITH THE STRIKE CLOWN!</p>
                             
                             <div className="flex items-center gap-3 mb-4">
@@ -190,7 +259,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                                 To be champion you have to golf balls passing the clown's tongue!
                             </p>
                             
-                            <button className="bg-[#26A69A] text-white font-badtyp text-2xl px-10 py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all">
+                            <button className="bg-[#229954] text-white font-badtyp text-2xl px-10 py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all">
                                 COURSE AVAILABLE
                             </button>
                         </div>
@@ -260,7 +329,8 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                 <div className="relative w-full py-8 px-8 z-20 flex justify-between items-center">
                     <button 
                         onClick={handleBackClick}
-                        className={`bg-[#26A69A] p-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all ${showBonus ? 'opacity-50 pointer-events-none' : ''}`}
+                        data-action="reset"
+                        className={`bg-[#229954] p-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all ${showBonus ? 'opacity-50 pointer-events-none' : ''}`}
                     >
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
@@ -272,6 +342,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                             <>
                                 <button 
                                     onClick={handleBonusClick}
+                                    data-action="bonus"
                                     className="bg-[#FFD166] text-white font-badtyp text-3xl px-12 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
                                 >
                                     <div className="flex items-center gap-2">
@@ -282,6 +353,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                                 </button>
                                 <button 
                                     onClick={handleFailClick}
+                                    data-action="loss"
                                     className="bg-[#64748B] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
                                 >
                                     FAIL
@@ -289,6 +361,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                                 </button>
                                 <button 
                                     onClick={handleOkClick}
+                                    data-action="win"
                                     className="bg-[#E76F51] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
                                 >
                                     WIN

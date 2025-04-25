@@ -169,7 +169,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     return (
         <div className="min-h-screen h-screen w-full bg-black flex flex-col overflow-hidden">
             {/* BARRE DE NAVIGATION */}
-            <div className="w-full flex items-center justify-between px-6 md:px-12 py-3 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{flex: '0 0 auto'}}>
+            <div className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{flex: '0 0 auto'}}>
                 <div className="font-badtyp text-2xl md:text-4xl text-white flex items-center gap-2 md:gap-3">
                     <Flag className="w-6 h-6 md:w-8 md:h-8 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
                 </div>

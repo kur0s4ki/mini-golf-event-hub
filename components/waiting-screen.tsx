@@ -65,7 +65,7 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
     return (
         <div className="min-h-screen w-full bg-black flex flex-col">
             {/* BARRE DE NAVIGATION */}
-            <div className="w-full flex items-center justify-between px-12 py-4 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30">
+            <div className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30">
                 <div className="font-badtyp text-3xl md:text-4xl text-white flex items-center gap-3">
                     <Flag className="w-7 h-7 md:w-8 md:h-8 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
                 </div>
@@ -109,7 +109,7 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                 </div>
 
                 {/* CARTE D'INFORMATION PRINCIPALE - compactée */}
-                <div className="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center gap-4 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-6 py-8 mt-8 mb-8">
+                <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center gap-8 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-12 py-16 mt-12 mb-12 scale-110">
                     <img src="/images/logo.png" alt="Mini Golf" className="w-[200px] h-auto object-contain mb-2" style={{ filter: 'drop-shadow(0px 4px 8px rgba(216, 114, 77, 0.2))' }} />
                     <span className="text-white font-badtyp text-2xl md:text-3xl text-center">En attente de joueurs...</span>
                     <span className="text-[#FFD166] font-badtyp text-lg md:text-xl text-center mt-2">Placez votre balle sur la zone violette pour démarrer la partie !</span>

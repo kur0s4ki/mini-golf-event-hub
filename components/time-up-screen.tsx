@@ -14,13 +14,13 @@ interface TimeUpScreenProps {
 const TimeUpScreen: React.FC<TimeUpScreenProps> = ({ 
     className, 
     points, 
-    playerName = "Player", 
-    teamName = "Team" 
+    playerName = "Joueur", 
+    teamName = "Équipe" 
 }) => {
     const [countdown, setCountdown] = useState(10)
     const [clockRotation, setClockRotation] = useState(0)
     
-    // Generate sand particles for hourglass effect
+    // Générer des particules de sable pour l'effet sablier
     const sandParticles = Array.from({ length: 120 }, (_, index) => ({
         id: index,
         left: `${Math.random() * 100}%`,
@@ -31,7 +31,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
         color: Math.random() > 0.7 ? '#FFD166' : '#E6C96B'
     }))
     
-    // Clock hands rotation animation
+    // Animation de rotation des aiguilles de l'horloge
     useEffect(() => {
         const rotationInterval = setInterval(() => {
             setClockRotation(prev => (prev + 30) % 360)
@@ -40,7 +40,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
         return () => clearInterval(rotationInterval)
     }, [])
     
-    // Countdown to auto-redirect
+    // Compte à rebours pour la redirection automatique
     useEffect(() => {
         const timer = setInterval(() => {
             setCountdown(prev => {
@@ -56,7 +56,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
         return () => clearInterval(timer)
     }, [])
     
-    // Generate clock tick marks
+    // Générer les marques de l'horloge
     const clockTicks = Array.from({ length: 12 }, (_, index) => ({
         id: index,
         rotation: index * 30,
@@ -66,12 +66,12 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
     
     return (
         <div className={`flex items-center justify-center h-full w-full ${className}`}>
-            {/* Main container - full width and height of viewport */}
+            {/* Conteneur principal - pleine largeur et hauteur de la fenêtre */}
             <div className="fixed inset-0 flex flex-col items-center justify-center p-0 overflow-hidden">
-                {/* Background gradient - bluish for time up */}
+                {/* Dégradé de fond - bleu pour l'écran temps écoulé */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#1E293B] from-10% via-[#334155] via-40% to-[#475569] to-90%" />
                 
-                {/* Sand particles animation - falling from top */}
+                {/* Animation de particules de sable - chute depuis le haut */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     {sandParticles.map((particle) => (
                         <div
@@ -91,7 +91,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                     ))}
                 </div>
                 
-                {/* Clock ticking particles */}
+                {/* Particules de l'horloge */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute inset-0 flex items-center justify-center">
                         {clockTicks.map((tick) => (
@@ -110,40 +110,40 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                     </div>
                 </div>
                 
-                {/* Top navigation bar */}
+                {/* Barre de navigation supérieure */}
                 <div className="relative w-full py-5 px-8 z-20 flex justify-between items-center">
-                    {/* MIND Golf logo */}
-                    <div className="font-badtyp text-4xl text-[#94A3B8]">
-                        <span className="text-white">The</span> MIND <span className="text-white">golf</span>
+                    {/* Logo MINI Golf */}
+                    <div className="font-badtyp text-4xl text-[#FFD166]">
+                        <span className="text-white">MINI</span> <span className="text-[#FFD166]">Golf</span>
                     </div>
                 </div>
 
-                {/* Main content - time up message */}
+                {/* Contenu principal - message temps écoulé */}
                 <div className="relative flex-1 w-full max-w-5xl mx-auto z-10 flex flex-col items-center justify-center p-8">
                     <div className="w-full rounded-3xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-8 flex flex-col items-center relative overflow-hidden">
-                        {/* Background pattern - clock pattern */}
+                        {/* Modèle de fond - motif horloge */}
                         <div className="absolute inset-0 w-full h-full bg-cover bg-center opacity-20"
                             style={{ backgroundImage: "url('/images/bg.png')" }} />
                         
-                        {/* Content */}
+                        {/* Contenu */}
                         <div className="relative z-10 w-full flex flex-col items-center">
-                            {/* Time Up message */}
+                            {/* Message temps écoulé */}
                             <h1 className="text-white font-badtyp text-7xl mb-4">
-                                TIME'S UP!
+                                TEMPS ÉCOULÉ!
                             </h1>
                             
-                            {/* Player info */}
+                            {/* Informations joueur */}
                             <h2 className="text-[#94A3B8] font-badtyp text-3xl mb-8">
                                 {playerName} • {teamName}
                             </h2>
                             
-                            {/* Clock animation */}
+                            {/* Animation de l'horloge */}
                             <div className="mb-8 transition-all duration-700">
                                 <div className="relative z-20">
-                                    {/* Animated clock */}
+                                    {/* Horloge animée */}
                                     <div className="relative flex flex-col items-center">
                                         <div className="w-48 h-48 rounded-full border-8 border-white bg-[#1E293B]/40 flex items-center justify-center relative">
-                                            {/* Hour hand */}
+                                            {/* Aiguille des heures */}
                                             <div 
                                                 className="absolute w-1.5 h-16 bg-[#94A3B8] rounded-full"
                                                 style={{ 
@@ -154,7 +154,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                                                 }}
                                             />
                                             
-                                            {/* Minute hand */}
+                                            {/* Aiguille des minutes */}
                                             <div 
                                                 className="absolute w-1 h-24 bg-white rounded-full"
                                                 style={{ 
@@ -165,7 +165,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                                                 }}
                                             />
                                             
-                                            {/* Second hand with independent animation */}
+                                            {/* Aiguille des secondes avec animation indépendante */}
                                             <div 
                                                 className="absolute w-0.5 h-22 bg-[#E76F51] rounded-full animate-spin-slow" 
                                                 style={{
@@ -176,10 +176,10 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                                                 }}
                                             />
                                             
-                                            {/* Center dot */}
+                                            {/* Point central */}
                                             <div className="absolute w-4 h-4 bg-[#E76F51] rounded-full z-10" />
                                             
-                                            {/* Clock numbers */}
+                                            {/* Chiffres de l'horloge */}
                                             <div className="absolute top-4 font-badtyp text-lg text-white">12</div>
                                             <div className="absolute right-4 font-badtyp text-lg text-white">3</div>
                                             <div className="absolute bottom-4 font-badtyp text-lg text-white">6</div>
@@ -189,7 +189,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                                         <div className="mt-6 flex flex-col items-center">
                                             <div className="flex gap-3 items-center">
                                                 <AlertCircle className="w-8 h-8 text-[#E76F51]" />
-                                                <span className="text-white font-badtyp text-xl animate-pulse-slow">OUT OF TIME</span>
+                                                <span className="text-white font-badtyp text-xl animate-pulse-slow">TEMPS ÉCOULÉ</span>
                                             </div>
                                         </div>
                                     </div>
@@ -199,7 +199,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                             {/* Points */}
                             <div className="bg-[#475569] px-12 py-6 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] mb-10 flex items-center">
                                 <div className="text-center">
-                                    <div className="text-white font-badtyp text-2xl mb-1">FINAL SCORE</div>
+                                    <div className="text-white font-badtyp text-2xl mb-1">SCORE FINAL</div>
                                     <div className="text-white font-badtyp text-5xl">{points}</div>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                     </div>
                 </div>
 
-                {/* Auto-redirect countdown - more prominent */}
+                {/* Compte à rebours de redirection automatique - plus visible */}
                 <div className="relative z-20 -mt-6 mb-16">
                     <div className="flex flex-col items-center">
                         <div className={`
@@ -226,7 +226,7 @@ const TimeUpScreen: React.FC<TimeUpScreenProps> = ({
                             </div>
                         </div>
                         <div className="text-white font-badtyp text-xl opacity-80">
-                            Returning to lobby...
+                            Retour au salon...
                         </div>
                     </div>
                 </div>

@@ -141,20 +141,8 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     
     // Handle OK button click to go to win screen
     const handleOkClick = () => {
-        // Only add 10 points to the score and send 10 as the win points
-        setTotalScore(prev => prev + 10);
-        gameEvents.emit("win", totalScore + 10);
-    }
-    
-    // Handle FAIL button click to go to loss screen
-    const handleFailClick = () => {
-        // Calculate a lower score based on remaining time
-        const timeBonus = Math.floor(timeRemaining / 5);
-        const baseScore = 200;
-        const finalScore = baseScore + timeBonus + totalScore;
-        
-        // Emit loss event with the score to trigger transition to loss screen
-        gameEvents.emit("loss", finalScore);
+        // Only emit the current score, do not add extra points
+        gameEvents.emit("win", totalScore);
     }
     
     // Handle BONUS button click
@@ -180,7 +168,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
 
     return (
         <div className="min-h-screen h-screen w-full bg-black flex flex-col overflow-hidden">
-            {/* HEADER BAR */}
+            {/* BARRE DE NAVIGATION */}
             <div className="w-full flex items-center justify-between px-6 md:px-12 py-3 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{flex: '0 0 auto'}}>
                 <div className="font-badtyp text-2xl md:text-4xl text-white flex items-center gap-2 md:gap-3">
                     <Flag className="w-6 h-6 md:w-8 md:h-8 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
@@ -336,23 +324,15 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                                 <Gift className="w-5 h-5 md:w-6 md:h-6 text-white" />
                                 <span>BONUS</span>
                             </div>
-                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Show Points</span>
-                        </button>
-                        <button 
-                            onClick={handleFailClick}
-                            data-action="loss"
-                            className="bg-[#64748B] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
-                        >
-                            FAIL
-                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Show Loss Screen</span>
+                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Afficher les points</span>
                         </button>
                         <button 
                             onClick={handleOkClick}
                             data-action="win"
                             className="bg-[#E76F51] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
                         >
-                            WIN
-                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Show Win Screen</span>
+                            GAGNER
+                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Voir l'écran de victoire</span>
                         </button>
                     </>
                 )}

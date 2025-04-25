@@ -60,9 +60,27 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+// Listen for 'x' key to send a hardcoded 'start' command (same structure as interactive start)
+process.stdin.on('data', (chunk) => {
+  const key = chunk.toString().trim().toLowerCase();
+  if (key === 'x') {
+    const message = {
+      action: 'start',
+      gameName: 'Mini Golf Masters',
+      instructions: 'Visez le trou en un minimum de coups. Utilisez les rebonds pour éviter les obstacles !',
+      playerDisplayName: 'Jean Dupont',
+      timer: 90
+    };
+    broadcastMessage(message);
+    console.log('Game started for: Jean Dupont (via X key)');
+    // Prompt for next command, just like processGameCommand
+    handleCommand();
+  }
+});
+
 // Command handler function
 function handleCommand() {
-  rl.question('\nEnter command (start, win, loss, timeUp, reset, bonus, help, exit): ', (cmd) => {
+  rl.question('\nEnter command (start, win, loss, timeUp, reset, bonus, b, help, exit): ', (cmd) => {
     const command = cmd.trim().toLowerCase();
     
     if (command === 'exit') {
@@ -73,7 +91,7 @@ function handleCommand() {
     } else if (command === 'help') {
       showHelp();
       handleCommand();
-    } else if (['start', 'win', 'loss', 'timeup', 'reset', 'bonus'].includes(command)) {
+    } else if (['start', 'win', 'loss', 'timeup', 'reset', 'bonus', 'b'].includes(command)) {
       processGameCommand(command);
     } else {
       console.log('Unknown command. Type "help" for available commands.');
@@ -89,7 +107,8 @@ function showHelp() {
   console.log('win    : Trigger win screen (with optional points)');
   console.log('loss   : Trigger loss screen (with optional points)');
   console.log('timeup : Trigger time\'s up screen (with optional points)');
-  console.log('bonus  : Show +500 points bonus animation');
+  console.log('bonus  : Show +500 points bonus animation (compatibility)');
+  console.log('b      : Show bonus animation with custom points');
   console.log('reset  : Reset game to waiting screen');
   console.log('help   : Show this help message');
   console.log('exit   : Close the server and exit');
@@ -102,14 +121,23 @@ function processGameCommand(command) {
     case 'start':
       rl.question('Enter player name: ', (playerName) => {
         rl.question('Enter team name: ', (teamName) => {
-          const message = {
-            action: 'start',
-            playerDisplayName: playerName || 'Player 1',
-            teamName: teamName || 'Team Awesome'
-          };
-          broadcastMessage(message);
-          console.log('Game started for:', playerName);
-          handleCommand();
+          rl.question('Enter game name: ', (gameName) => {
+            rl.question('Enter instructions: ', (instructions) => {
+              rl.question('Enter timer (seconds): ', (timerStr) => {
+                const timer = parseInt(timerStr) || 120;
+                const message = {
+                  action: 'start',
+                  gameName: gameName || 'Pinball',
+                  instructions: instructions || 'Shoot through the castle gate as many times as possible.',
+                  playerDisplayName: playerName || 'Player 1',
+                  timer: timer
+                };
+                broadcastMessage(message);
+                console.log('Game started for:', playerName);
+                handleCommand();
+              });
+            });
+          });
         });
       });
       break;
@@ -132,14 +160,17 @@ function processGameCommand(command) {
       });
       break;
       
-    case 'bonus':
-      const message = {
-        action: 'custom',
-        command: 'bonus'
-      };
-      broadcastMessage(message);
-      console.log('Bonus animation triggered');
-      handleCommand();
+    case 'b':
+      rl.question('Enter number of bonus points: ', (bonusPoints) => {
+        const points = parseInt(bonusPoints, 10) || 0;
+        const message = {
+          action: 'bonus',
+          points
+        };
+        broadcastMessage(message);
+        console.log(`Bonus animation triggered with ${points} points`);
+        handleCommand();
+      });
       break;
       
     case 'reset':

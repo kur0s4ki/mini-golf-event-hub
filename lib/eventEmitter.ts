@@ -6,6 +6,7 @@ type EventsMap = {
   loss: number;
   timeUp: number;
   reset: null;
+  bonus: number;
 };
 
 class EventEmitter {

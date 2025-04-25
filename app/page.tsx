@@ -15,6 +15,8 @@ export default function Home() {
     const [gameState, setGameState] = useState<GameState>("waiting")
     const [playerName, setPlayerName] = useState<string>("")
     const [teamName, setTeamName] = useState<string>("")
+    const [gameName, setGameName] = useState<string>("")
+    const [instructions, setInstructions] = useState<string>("")
     const [timerSeconds, setTimerSeconds] = useState<number>(20)
     const [points, setPoints] = useState<number>(0)
 
@@ -36,7 +38,9 @@ export default function Home() {
             // Update state
             setPlayerName(player.displayName)
             setTeamName(player.team.name)
-            setTimerSeconds(20)
+            setGameName(player.gameName || "")
+            setInstructions(player.instructions || "")
+            setTimerSeconds(player.timer || 20)
             setGameState("playing")
 
             // Send WebSocket message
@@ -44,7 +48,7 @@ export default function Home() {
                 action: "start",
                 teamName: player.team.name,
                 playerDisplayName: player.displayName,
-                timer: 20
+                timer: player.timer || 20
             })
         }
 
@@ -97,6 +101,8 @@ export default function Home() {
             setGameState("waiting")
             setPlayerName("")
             setTeamName("")
+            setGameName("")
+            setInstructions("")
             setPoints(0)
 
             // Send WebSocket message
@@ -160,7 +166,7 @@ export default function Home() {
                 <WaitingScreen />
             )}
             {gameState === "playing" && (
-                <GameInProgress initialTime={timerSeconds} />
+                <GameInProgress initialTime={timerSeconds} gameName={gameName} instructions={instructions} playerName={playerName} />
             )}
             {gameState === "won" && (
                 <WinScreen 

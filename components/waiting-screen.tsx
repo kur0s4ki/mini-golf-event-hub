@@ -63,30 +63,38 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
     }
     
     return (
-        <div className={`flex items-center justify-center h-full w-full ${className}`}>
-            {/* Main container - full width and height of viewport */}
-            <div className="fixed inset-0 flex flex-col items-center justify-center p-0 overflow-hidden">
-                {/* Background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#229954] via-[#7CB518] to-[#C9E265]" />
-                {/* Overlay for better contrast */}
-                <div className="absolute inset-0 bg-black/30" />
-                
-                {/* Background decorative elements */}
-                <div className="absolute inset-0 overflow-hidden">
-                    {bgElements.map((element, index) => (
+        <div className="min-h-screen w-full bg-black flex flex-col">
+            {/* HEADER BAR */}
+            <div className="w-full flex items-center justify-between px-12 py-4 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30">
+                <div className="font-badtyp text-3xl md:text-4xl text-white flex items-center gap-3">
+                    <Flag className="w-7 h-7 md:w-8 md:h-8 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
+                </div>
+                <div className="flex flex-col items-center">
+                    <span className="font-badtyp text-4xl md:text-5xl tracking-wide text-white">EN ATTENTE</span>
+                </div>
+                <div className="flex flex-col items-end">
+                    <span className="font-badtyp text-3xl md:text-4xl text-white">Prêt</span>
+                    <span className="font-badtyp text-4xl md:text-5xl text-[#FFD166]">✓</span>
+                </div>
+            </div>
+
+            {/* MAIN CONTENT */}
+            <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
+                {/* Background icons (subtle) */}
+                <div className="absolute inset-0 pointer-events-none z-0">
+                    {bgElements.map((element, idx) => (
                         <div
-                            key={index}
-                            className="absolute"
+                            key={idx}
                             style={{
+                                position: 'absolute',
                                 top: element.top,
                                 left: element.left,
-                                transform: `rotate(${element.rotation})`,
+                                width: element.size,
+                                height: element.size,
                                 opacity: element.opacity,
+                                transform: `rotate(${element.rotation})`,
                             }}
                         >
-                            {element.type === 'ball' && (
-                                <div className="rounded-full bg-white" style={{ width: element.size, height: element.size }}></div>
-                            )}
                             {element.type === 'flag' && (
                                 <Flag className="text-white" style={{ width: element.size, height: element.size }} />
                             )}
@@ -99,85 +107,56 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                         </div>
                     ))}
                 </div>
-                
-                {/* Top navigation bar */}
-                <div className="relative w-full py-5 px-8 z-20 flex justify-between items-center">
-                    {/* Timer placeholder - empty to match layout */}
-                    <div></div>
-                    
-                    {/* MIND Golf logo */}
-                    <div className="absolute right-8 top-6">
-                        <div className="font-badtyp text-4xl text-[#26A69A]">
-                            <span className="text-white"></span> MINI <span className="text-white">Golf</span>
-                        </div>
-                    </div>
-                </div>
 
-                {/* Center content */}
-                <div className="relative flex-1 w-full max-w-5xl mx-auto z-10 flex flex-col items-center justify-center p-8">
-                    <div className="w-full rounded-3xl p-8 flex flex-col items-center relative overflow-hidden">
-                        {/* Content with relative positioning to sit above background */}
-                        <div className="relative z-10 mb-16 flex items-center justify-center w-full">
-                            <div className="animate-zoom">
-                                <img
-                                    src="/images/logo.png"
-                                    alt="The MIND golf"
-                                    className="w-[500px] h-auto object-contain"
-                                    style={{ filter: 'drop-shadow(0px 4px 8px rgba(216, 114, 77, 0.2))' }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Touch to begin button - positioned to be half in and half out of the purple box */}
-                <div className="relative z-20 -mt-12 mb-16">
+                {/* MAIN INFO CARD - compacted */}
+                <div className="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center gap-4 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-6 py-8 mt-8 mb-8">
+                    <img src="/images/logo.png" alt="The MIND golf" className="w-[200px] h-auto object-contain mb-2" style={{ filter: 'drop-shadow(0px 4px 8px rgba(216, 114, 77, 0.2))' }} />
+                    <span className="text-white font-badtyp text-2xl md:text-3xl text-center">En attente de joueurs...</span>
+                    <span className="text-[#FFD166] font-badtyp text-lg md:text-xl text-center mt-2">Place ta balle sur la zone violette pour démarrer la partie !</span>
                     <button
                         onClick={handleStartClick}
-                        className="bg-[#229954] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all"
+                        className="mt-6 bg-[#229954] text-white font-badtyp text-xl md:text-2xl px-8 py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all"
                     >
-                        Place ta balle sur la zone violette pour démarrer la partie !
-                    </button>
-                </div>
-
-                {/* Footer navigation */}
-                <div className="relative w-full py-8 px-8 z-20 flex justify-between items-center">
-                    {/* Language selector */}
-                    <button className="bg-[#229954] p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all flex items-center gap-2" onClick={() => setShowLangPopup(true)}>
-                        <Globe className="w-6 h-6 text-white" />
-                        <span className="text-white font-badtyp text-xl">{selectedLang}</span>
-                    </button>
-                    {showLangPopup && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowLangPopup(false)}>
-                            <div className="bg-white rounded-3xl border-4 border-[#229954] shadow-lg p-8 flex flex-col items-center min-w-[300px]" onClick={e => e.stopPropagation()}>
-                                <span className="font-badtyp text-3xl mb-6 text-[#229954]">Select Language</span>
-                                <button
-                                    className="w-full mb-3 bg-[#229954] text-white font-badtyp text-2xl px-8 py-3 rounded-xl border-4 border-white shadow-md hover:bg-[#1b7a3a] transition-all flex items-center gap-3 justify-center"
-                                    onClick={() => { setSelectedLang('EN'); setShowLangPopup(false); }}
-                                >
-                                    <img src="/images/flags/en.png" alt="English flag" className="w-6 h-6 rounded-full object-cover" />
-                                    English
-                                </button>
-                                <button
-                                    className="w-full mb-3 bg-[#229954] text-white font-badtyp text-2xl px-8 py-3 rounded-xl border-4 border-white shadow-md hover:bg-[#1b7a3a] transition-all flex items-center gap-3 justify-center"
-                                    onClick={() => { setSelectedLang('FR'); setShowLangPopup(false); }}
-                                >
-                                    <img src="/images/flags/fr.png" alt="French flag" className="w-6 h-6 rounded-full object-cover" />
-                                    Français
-                                </button>
-                                {/* Add more languages here if needed */}
-                            </div>
-                        </div>
-                    )}
-                    
-                    {/* Help button */}
-                    <button className="bg-[#229954] p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all">
-                        <span className="text-white font-badtyp text-2xl">?</span>
+                        Démarrer la partie
                     </button>
                 </div>
             </div>
+
+            {/* FOOTER */}
+            <div className="relative w-full py-4 px-8 z-20 flex justify-center items-center gap-6">
+                {/* Language selector */}
+                <button className="bg-[#229954] p-3 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all flex items-center gap-2" onClick={() => setShowLangPopup(true)}>
+                    <Globe className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                    <span className="text-white font-badtyp text-base md:text-xl">{selectedLang}</span>
+                </button>
+                {showLangPopup && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowLangPopup(false)}>
+                        <div className="bg-white rounded-3xl border-4 border-[#229954] shadow-lg p-8 flex flex-col items-center min-w-[240px] md:min-w-[300px]" onClick={e => e.stopPropagation()}>
+                            <span className="font-badtyp text-2xl md:text-3xl mb-6 text-[#229954]">Select Language</span>
+                            <button
+                                className="w-full mb-3 bg-[#229954] text-white font-badtyp text-lg md:text-2xl px-6 md:px-8 py-2 md:py-3 rounded-xl border-4 border-white shadow-md hover:bg-[#1b7a3a] transition-all flex items-center gap-3 justify-center"
+                                onClick={() => { setSelectedLang('EN'); setShowLangPopup(false); }}
+                            >
+                                <img src="/images/flags/en.png" alt="English flag" className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover" />
+                                English
+                            </button>
+                            <button
+                                className="w-full mb-3 bg-[#229954] text-white font-badtyp text-lg md:text-2xl px-6 md:px-8 py-2 md:py-3 rounded-xl border-4 border-white shadow-md hover:bg-[#1b7a3a] transition-all flex items-center gap-3 justify-center"
+                                onClick={() => { setSelectedLang('FR'); setShowLangPopup(false); }}
+                            >
+                                <img src="/images/flags/fr.png" alt="French flag" className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover" />
+                                Français
+                            </button>
+                        </div>
+                    </div>
+                )}
+                {/* Help button */}
+                <button className="bg-[#229954] p-3 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all">
+                    <span className="text-white font-badtyp text-xl md:text-2xl">?</span>
+                </button>
+            </div>
         </div>
-    )
+    );
 }
 
 export default WaitingScreen

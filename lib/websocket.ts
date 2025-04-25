@@ -44,10 +44,13 @@ class WebSocketClient {
     if (message.action) {
       switch (message.action) {
         case 'start':
-          if (message.playerDisplayName && message.teamName) {
+          if (message.playerDisplayName) {
             gameEvents.emit("start", {
               displayName: message.playerDisplayName,
-              team: { name: message.teamName }
+              team: { name: "" },
+              gameName: message.gameName || '',
+              instructions: message.instructions || '',
+              timer: message.timer || 20
             });
           }
           break;
@@ -72,6 +75,12 @@ class WebSocketClient {
           
         case 'reset':
           gameEvents.emit("reset", null);
+          break;
+          
+        case 'bonus':
+          if (typeof message.points === 'number') {
+            gameEvents.emit("bonus", message.points);
+          }
           break;
           
         case 'custom':

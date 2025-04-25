@@ -3,6 +3,9 @@ export interface PlayerInfo {
   team: {
     name: string;
   };
+  gameName?: string;
+  instructions?: string;
+  timer?: number;
 }
 
 export type GameState = "waiting" | "playing" | "won" | "lost" | "timeUp";

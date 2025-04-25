@@ -105,7 +105,7 @@ const KeyboardSimulator: React.FC<KeyboardSimulatorProps> = ({
           <span className="font-bold">[L]</span> Loss
         </div>
         <div className={`p-1 ${activatedKeys.includes('KeyB') ? 'bg-yellow-500' : ''}`}>
-          <span className="font-bold">[B]</span> Bonus +500
+          <span className="font-bold">[B]</span> Bonus +1000
         </div>
         <div className={`p-1 ${activatedKeys.includes('KeyT') ? 'bg-blue-500' : ''}`}>
           <span className="font-bold">[T]</span> Time's Up

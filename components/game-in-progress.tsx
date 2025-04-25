@@ -1,12 +1,16 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { Home, Globe, Gift, Star, Plus, Gem, Flag, Trophy, Target } from "lucide-react"
+import { Home, Globe, Gift, Star, Plus, Gem, Flag, Trophy, Target, Lightbulb } from "lucide-react"
 import { gameEvents } from "@/lib/eventEmitter"
 
 interface GameInProgressProps {
     className?: string
     initialTime?: number
+    gameName?: string
+    instructions?: string
+    playerName?: string
+    difficulty?: string
 }
 
 interface BackgroundElement {
@@ -20,7 +24,11 @@ interface BackgroundElement {
 
 const GameInProgress: React.FC<GameInProgressProps> = ({ 
     className, 
-    initialTime = 20 // 20 seconds
+    initialTime = 20, // 20 seconds
+    gameName, 
+    instructions, 
+    playerName, 
+    difficulty = "Easy"
 }) => {
     const [timeRemaining, setTimeRemaining] = useState(initialTime)
     const [showBonus, setShowBonus] = useState(false)
@@ -28,6 +36,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     const [bonusScale, setBonusScale] = useState(0)
     const [bonusCountdown, setBonusCountdown] = useState(5)
     const [bgElements, setBgElements] = useState<BackgroundElement[]>([]);
+    const [bonusPoints, setBonusPoints] = useState<number>(10); // default to 10 for consistency
     
     useEffect(() => {
         const timer = setInterval(() => {
@@ -73,6 +82,19 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
         setBgElements(elements);
     }, []);
     
+    useEffect(() => {
+        // Listen for bonus events from websocket
+        const handleBonus = (points: number) => {
+            setBonusPoints(points || 10); // always show the correct amount
+            setShowBonus(true);
+            setTotalScore(prev => prev + (points || 0));
+        };
+        gameEvents.on("bonus", handleBonus);
+        return () => {
+            gameEvents.off("bonus", handleBonus);
+        };
+    }, []);
+
     // Bonus animation effect
     useEffect(() => {
         if (!showBonus) return;
@@ -91,10 +113,9 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                     clearInterval(timer);
                     // First fade out the animation
                     setBonusScale(0);
-                    // Then hide the bonus overlay and add the points
+                    // Then hide the bonus overlay 
                     setTimeout(() => {
                         setShowBonus(false);
-                        setTotalScore(prev => prev + 500);
                     }, 600);
                     return 0;
                 }
@@ -120,13 +141,9 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     
     // Handle OK button click to go to win screen
     const handleOkClick = () => {
-        // Calculate a score based on remaining time
-        const timeBonus = Math.floor(timeRemaining / 3);
-        const baseScore = 500;
-        const finalScore = baseScore + timeBonus + totalScore;
-        
-        // Emit win event with the score to trigger transition to win screen
-        gameEvents.emit("win", finalScore);
+        // Only add 10 points to the score and send 10 as the win points
+        setTotalScore(prev => prev + 10);
+        gameEvents.emit("win", totalScore + 10);
     }
     
     // Handle FAIL button click to go to loss screen
@@ -142,7 +159,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     
     // Handle BONUS button click
     const handleBonusClick = () => {
-        setShowBonus(true);
+        gameEvents.emit("bonus", 10);
     }
     
     // Handle back button click
@@ -162,34 +179,39 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     }));
 
     return (
-        <div 
-            className={`flex items-center justify-center h-full w-full ${className}`}
-            data-bonus-trigger
-        >
-            {/* Main container - full width and height of viewport */}
-            <div className="fixed inset-0 flex flex-col items-center justify-between p-0 overflow-hidden">
-                {/* Background base color */}
-                <div className="absolute inset-0 bg-[#6B43A9]" />
-                
-                {/* Background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#229954] via-[#7CB518] to-[#C9E265]" />
-                
-                {/* Background decorative elements */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    {bgElements.map((element, index) => (
+        <div className="min-h-screen h-screen w-full bg-black flex flex-col overflow-hidden">
+            {/* HEADER BAR */}
+            <div className="w-full flex items-center justify-between px-6 md:px-12 py-3 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{flex: '0 0 auto'}}>
+                <div className="font-badtyp text-2xl md:text-4xl text-white flex items-center gap-2 md:gap-3">
+                    <Flag className="w-6 h-6 md:w-8 md:h-8 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
+                </div>
+                <div className="flex flex-col items-center">
+                    <span className={`font-badtyp text-3xl md:text-5xl tracking-wide ${isCritical ? 'text-red-500 animate-flash' : isTimeLow ? 'text-[#FFD166]' : 'text-white'}`}>{formatTime(timeRemaining)}</span>
+                    <span className="text-white/70 text-base md:text-lg font-badtyp tracking-wider mt-1">TEMPS RESTANT</span>
+                </div>
+                <div className="flex flex-col items-end">
+                    <span className="font-badtyp text-2xl md:text-4xl text-white">Score</span>
+                    <span className="font-badtyp text-3xl md:text-5xl text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] bg-[#FFD166] bg-clip-text text-transparent" style={{ WebkitTextStroke: '2px #FFD166', filter: 'drop-shadow(0 1px 8px #000)' }}>{totalScore}</span>
+                </div>
+            </div>
+
+            {/* MAIN CONTENT - shrink card and spacing for fit */}
+            <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden min-h-0">
+                {/* Background icons (subtle) */}
+                <div className="absolute inset-0 pointer-events-none z-0">
+                    {bgElements.map((element, idx) => (
                         <div
-                            key={index}
-                            className="absolute"
+                            key={idx}
                             style={{
+                                position: 'absolute',
                                 top: element.top,
                                 left: element.left,
-                                transform: `rotate(${element.rotation})`,
+                                width: element.size,
+                                height: element.size,
                                 opacity: element.opacity,
+                                transform: `rotate(${element.rotation})`,
                             }}
                         >
-                            {element.type === 'ball' && (
-                                <div className="rounded-full bg-white" style={{ width: element.size, height: element.size }}></div>
-                            )}
                             {element.type === 'flag' && (
                                 <Flag className="text-white" style={{ width: element.size, height: element.size }} />
                             )}
@@ -202,178 +224,141 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                         </div>
                     ))}
                 </div>
-                
-                {/* Overlay for better contrast */}
-                <div className="absolute inset-0 bg-black/30" />
-                
-                {/* Top navigation bar */}
-                <div className="relative w-full py-5 px-8 z-20 flex justify-between items-center">
-                    {/* Timer - with 3D effect */}
-                    <div 
-                        className={`
-                            min-w-[380px] min-h-[120px] 
-                            rounded-xl border-4 border-white 
-                            shadow-[0_6px_0_rgba(0,0,0,0.2)] 
-                            flex items-center justify-center 
-                            transition-all duration-300
-                            ${isCritical ? 'bg-red-600' : isTimeLow ? 'bg-[#E76F51]' : 'bg-[#229954]'} 
-                            ${isCritical ? 'animate-shake' : isTimeLow ? 'animate-heartbeat' : ''}
-                        `}
-                    >
-                        <span 
-                            className={`
-                                font-badtyp text-6xl text-white tracking-wide
-                                ${isCritical ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] animate-flash' : ''}
-                            `}
-                        >
-                            {formatTime(timeRemaining)}
-                        </span>
-                    </div>
-                    
-                    {/* Score display */}
-                    <div className="absolute right-8 top-6 flex flex-col items-end">
-                        <div className="font-badtyp text-4xl text-[#229954]">
-                            <span className="text-white"></span> MINI <span className="text-white">golf</span>
-                        </div>
-                    </div>
-                </div>
-                
-                {/* Main game content */}
-                <div className="relative flex-1 w-full max-w-4xl mx-auto z-10 flex flex-col items-center justify-center p-8">
-                    {!showBonus && (
-                        <div className="w-full bg-[#6B43A9] rounded-3xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-8 flex flex-col items-center">
-                            <h1 className="text-[#229954] font-badtyp text-5xl mb-3">STRIKE CLOWN</h1>
-                            <p className="text-white font-badtyp text-2xl mb-5">LET'S PLAY WITH THE STRIKE CLOWN!</p>
-                            
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="text-[#E76F51] uppercase font-badtyp text-xl">Difficulty</span>
-                                <div className="flex gap-2">
-                                    <span className="text-[#E76F51] text-3xl">▲</span>
-                                    <span className="text-[#E76F51] text-3xl">▲</span>
-                                    <span className="text-[#E76F51] text-3xl">▲</span>
-                                    <span className="text-[#E76F51]/30 text-3xl">▲</span>
-                                </div>
-                            </div>
-                            
-                            <p className="text-white/80 italic text-center max-w-md mb-8 font-badtyp text-xl">
-                                To be champion you have to golf balls passing the clown's tongue!
-                            </p>
-                            
-                            <button className="bg-[#229954] text-white font-badtyp text-2xl px-10 py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all">
-                                COURSE AVAILABLE
-                            </button>
-                        </div>
-                    )}
 
-                    {/* Bonus animation overlay */}
-                    {showBonus && (
-                        <div className="w-full h-full flex items-center justify-center relative">
-                            {/* Sparkle animations */}
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                {sparkles.map((sparkle) => (
-                                    <div
-                                        key={sparkle.id}
-                                        className="absolute sparkle animate-sparkle"
-                                        style={{
-                                            top: sparkle.top,
-                                            left: sparkle.left,
-                                            width: sparkle.size,
-                                            height: sparkle.size,
-                                            backgroundColor: sparkle.color,
-                                            borderRadius: '50%',
-                                            opacity: 0,
-                                            transform: 'scale(0)',
-                                            animationDelay: sparkle.animationDelay,
-                                            animationDuration: sparkle.animationDuration
-                                        }}
-                                    />
-                                ))}
-                            </div>
-                            
-                            {/* Bonus message */}
-                            <div 
-                                className="flex flex-col items-center justify-center transition-all duration-700"
-                                style={{ transform: `scale(${bonusScale})` }}
-                            >
-                                <div className="text-white font-badtyp text-2xl mb-2 animate-bounce-slow">
-                                    BONUS!
-                                </div>
-                                
-                                <div className="relative flex items-center justify-center">
-                                    {/* Background glow */}
-                                    <div className="absolute w-80 h-80 rounded-full bg-[#FFD166]/20 animate-pulse-slow" />
-                                    
-                                    <div className="relative bg-[#FFD166] px-12 py-8 rounded-xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] flex items-center justify-center animate-bounce-very-slow">
-                                        <Plus className="w-16 h-16 text-white absolute top-3 left-[1px] animate-pulse" />
-                                        <Gem className="w-12 h-12 text-white absolute top-5 right-4 animate-spin-slow" />
-                                        <div className="relative z-10 text-white font-badtyp text-8xl tracking-wider">
-                                            500
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="mt-8 bg-[#E76F51] px-6 py-3 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)]">
-                                    <div className="flex items-center gap-2">
-                                        <Star className="w-6 h-6 text-white animate-pulse-slow" />
-                                        <span className="text-white font-badtyp text-2xl">POINTS ADDED</span>
-                                        <Star className="w-6 h-6 text-white animate-pulse-slow" style={{ animationDelay: '0.5s' }} />
-                                    </div>
-                                </div>
-                                
+                {/* MAIN INFO CARD - compact and responsive */}
+                {!showBonus && (
+                    <div className="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center gap-3 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-4 md:px-8 py-6 md:py-8 mt-4 mb-4">
+                        {/* Player */}
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[#FFD166] font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5">GOLFEUR</span>
+                            <span className="text-white font-badtyp text-xl md:text-3xl drop-shadow-lg animate-pop-in">{playerName || 'Jean Dupont'}</span>
+                        </div>
+                        {/* Game Name */}
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-white/70 font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5">JEU</span>
+                            <span className="text-white font-badtyp text-xl md:text-3xl drop-shadow-xl animate-pop-in">{gameName || 'Super Mini Golf'}</span>
+                        </div>
+                        {/* Instructions */}
+                        <div className="flex flex-col items-center gap-0.5 w-full">
+                            <span className="text-[#FFD166] font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5 flex items-center gap-1"><Lightbulb className="w-4 h-4 md:w-5 md:h-5 text-[#FFD166]" />CONSIGNES DE JEU</span>
+                            <p className="text-white font-badtyp text-base md:text-xl text-center rounded-2xl px-3 md:px-5 py-3 md:py-5 shadow-lg border-white/10 border animate-fade-in">
+                                {instructions || 'Visez le trou en un minimum de coups. Utilisez les rebonds pour éviter les obstacles !'}
+                            </p>
+                        </div>
+                        {/* Difficulty */}
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[#E76F51] font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5 flex items-center gap-1"><Star className="w-4 h-4 md:w-5 md:h-5 text-[#E76F51]" />DIFFICULTÉ</span>
+                            <div className="flex gap-0.5">
+                                <span className="text-white text-lg md:text-2xl">▲</span>
+                                <span className="text-white text-lg md:text-2xl">▲</span>
+                                <span className="text-white text-lg md:text-2xl">▲</span>
+                                <span className="text-white text-lg md:text-2xl opacity-30">▲</span>
                             </div>
                         </div>
-                    )}
-                </div>
-                
-                {/* Footer navigation */}
-                <div className="relative w-full py-8 px-8 z-20 flex justify-between items-center">
-                    <button 
-                        onClick={handleBackClick}
-                        data-action="reset"
-                        className={`bg-[#229954] p-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all ${showBonus ? 'opacity-50 pointer-events-none' : ''}`}
-                    >
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                    </button>
-                    
-                    <div className="flex gap-4">
-                        {!showBonus && (
-                            <>
-                                <button 
-                                    onClick={handleBonusClick}
-                                    data-action="bonus"
-                                    className="bg-[#FFD166] text-white font-badtyp text-3xl px-12 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <Gift className="w-8 h-8 text-white" />
-                                        <span>BONUS</span>
-                                    </div>
-                                    <span className="block text-sm mt-1 opacity-70 group-hover:opacity-100">+500 Points</span>
-                                </button>
-                                <button 
-                                    onClick={handleFailClick}
-                                    data-action="loss"
-                                    className="bg-[#64748B] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
-                                >
-                                    FAIL
-                                    <span className="block text-sm mt-1 opacity-70 group-hover:opacity-100">Show Loss Screen</span>
-                                </button>
-                                <button 
-                                    onClick={handleOkClick}
-                                    data-action="win"
-                                    className="bg-[#E76F51] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
-                                >
-                                    WIN
-                                    <span className="block text-sm mt-1 opacity-70 group-hover:opacity-100">Show Win Screen</span>
-                                </button>
-                            </>
-                        )}
                     </div>
-                </div>
+                )}
+
+                {/* BONUS OVERLAY */}
+                {showBonus && (
+                    <div className="absolute inset-0 flex items-center justify-center z-20">
+                        {/* Sparkle animations */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            {sparkles.map((sparkle) => (
+                                <div
+                                    key={sparkle.id}
+                                    className="absolute sparkle animate-sparkle"
+                                    style={{
+                                        top: sparkle.top,
+                                        left: sparkle.left,
+                                        width: sparkle.size,
+                                        height: sparkle.size,
+                                        backgroundColor: sparkle.color,
+                                        borderRadius: '50%',
+                                        opacity: 0,
+                                        transform: 'scale(0)',
+                                        animationDelay: sparkle.animationDelay,
+                                        animationDuration: sparkle.animationDuration
+                                    }}
+                                />
+                            ))}
+                        </div>
+                        {/* Bonus message and points now in column */}
+                        <div 
+                            className="flex flex-col items-center justify-center gap-4 transition-all duration-700"
+                            style={{ transform: `scale(${bonusScale})` }}
+                        >
+                            <div className="text-white font-badtyp text-lg md:text-2xl mb-2 animate-bounce-slow">
+                                BONUS!
+                            </div>
+                            <div className="relative flex flex-col items-center justify-center gap-4">
+                                {/* Background glow */}
+                                <div className="absolute w-48 h-48 md:w-80 md:h-80 rounded-full bg-[#FFD166]/20 animate-pulse-slow" />
+                                <div className="relative bg-[#FFD166] px-6 md:px-12 py-4 md:py-8 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] flex items-center justify-center animate-bounce-very-slow">
+                                    <Plus className="w-8 h-8 md:w-16 md:h-16 text-white absolute top-2 md:top-3 left-[1px] animate-pulse" />
+                                    <Gem className="w-7 h-7 md:w-12 md:h-12 text-white absolute top-3 md:top-5 right-4 animate-spin-slow" />
+                                    <div className="relative z-10 text-white font-badtyp text-5xl md:text-8xl tracking-wider">
+                                        {bonusPoints}
+                                    </div>
+                                </div>
+                                <div className="mt-4 md:mt-8 bg-[#E76F51] px-4 md:px-6 py-2 md:py-3 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] flex flex-col items-center">
+                                    <div className="flex flex-col items-center gap-1 md:gap-2">
+                                        <Star className="w-4 h-4 md:w-6 md:h-6 text-white animate-pulse-slow" />
+                                        <span className="text-white font-badtyp text-lg md:text-2xl">+{bonusPoints} POINTS</span>
+                                        <Star className="w-4 h-4 md:w-6 md:h-6 text-white animate-pulse-slow" style={{ animationDelay: '0.5s' }} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* FOOTER (admin controls, hidden on display) */}
+            <div className="relative w-full py-3 md:py-6 px-6 md:px-12 z-20 flex justify-center items-center gap-4 md:gap-8" style={{flex: '0 0 auto'}}>
+                {/* Show only if not in display mode (optional: add a prop to hide) */}
+                <button 
+                    onClick={handleBackClick}
+                    data-action="reset"
+                    className={`bg-[#229954] p-3 md:p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all ${showBonus ? 'opacity-50 pointer-events-none' : ''}`}
+                >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </button>
+                {!showBonus && (
+                    <>
+                        <button 
+                            onClick={handleBonusClick}
+                            data-action="bonus"
+                            className="bg-[#FFD166] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
+                        >
+                            <div className="flex items-center gap-1 md:gap-2">
+                                <Gift className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                                <span>BONUS</span>
+                            </div>
+                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Show Points</span>
+                        </button>
+                        <button 
+                            onClick={handleFailClick}
+                            data-action="loss"
+                            className="bg-[#64748B] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
+                        >
+                            FAIL
+                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Show Loss Screen</span>
+                        </button>
+                        <button 
+                            onClick={handleOkClick}
+                            data-action="win"
+                            className="bg-[#E76F51] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
+                        >
+                            WIN
+                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Show Win Screen</span>
+                        </button>
+                    </>
+                )}
             </div>
         </div>
-    )
+    );
 }
 
 export default GameInProgress 

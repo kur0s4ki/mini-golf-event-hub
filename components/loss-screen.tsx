@@ -1,8 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { Home, RefreshCcw, ArrowRight, CloudRain, Frown } from "lucide-react"
-import { gameEvents } from "@/lib/eventEmitter"
+import { CloudRain, Frown } from "lucide-react"
 
 interface LossScreenProps {
     className?: string
@@ -30,10 +29,6 @@ const LossScreen: React.FC<LossScreenProps> = ({
 
         return () => clearTimeout(timer)
     }, [])
-
-    const handlePlayAgain = () => {
-        gameEvents.emit("reset", null)
-    }
 
     // Generate rain drops array
     const raindrops = Array.from({ length: rainCount }, (_, index) => ({
@@ -71,18 +66,10 @@ const LossScreen: React.FC<LossScreenProps> = ({
 
                 {/* Top navigation bar */}
                 <div className="relative w-full py-5 px-8 z-20 flex justify-between items-center">
-                    {/* Home button */}
-                    <button
-                        onClick={handlePlayAgain}
-                        className="bg-[#475569] p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all"
-                    >
-                        <Home className="w-8 h-8 text-white" />
-                    </button>
-
-                    {/* MIND Golf logo */}
+                    {/* MINI Golf logo */}
                     <div className="absolute right-8 top-6">
                         <div className="font-badtyp text-4xl text-[#64748B]">
-                            <span className="text-white">The</span> MIND <span className="text-white">golf</span>
+                            MINI <span className="text-white">Golf</span>
                         </div>
                     </div>
                 </div>
@@ -132,15 +119,11 @@ const LossScreen: React.FC<LossScreenProps> = ({
                     </div>
                 </div>
 
-                {/* Play again button */}
+                {/* Countdown message - similar to TimeUpScreen */}
                 <div className="relative z-20 -mt-6 mb-16">
-                    <button
-                        onClick={handlePlayAgain}
-                        className="group bg-[#475569] text-white font-badtyp text-3xl px-16 py-5 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all flex items-center gap-4"
-                    >
-                        TRY AGAIN
-                        <RefreshCcw className="w-6 h-6 transition-transform group-hover:rotate-45" />
-                    </button>
+                    <div className="text-white font-badtyp text-xl opacity-80">
+                        Better luck next time!
+                    </div>
                 </div>
             </div>
         </div>

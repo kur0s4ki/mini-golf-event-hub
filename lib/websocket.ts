@@ -95,9 +95,19 @@ class WebSocketClient {
           break;
 
         case "win":
-        case "end": // Add end case that behaves like win
           if (typeof message.points === "number") {
             gameEvents.emit("win", message.points);
+          }
+          break;
+
+        case "end":
+          if (typeof message.points === "number") {
+            // If score is 0, show loss screen, otherwise show win screen
+            if (message.points === 0) {
+              gameEvents.emit("loss", message.points);
+            } else {
+              gameEvents.emit("win", message.points);
+            }
           }
           break;
 

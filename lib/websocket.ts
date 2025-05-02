@@ -10,7 +10,9 @@ class WebSocketClient {
 
   constructor() {
     // Use environment variable with fallback for WebSocket URL
-    this.url = process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost:8000";
+    // Include the /ws path required by NestJS
+    this.url =
+      process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost:8000/ws";
     console.log("WebSocket URL:", this.url);
   }
 

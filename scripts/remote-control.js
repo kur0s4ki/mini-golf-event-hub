@@ -3,7 +3,7 @@ const WebSocket = require("ws");
 const readline = require("readline");
 
 // Create WebSocket connection to the server
-const ws = new WebSocket("ws://localhost:8080");
+const ws = new WebSocket("ws://localhost:3045");
 
 // Create interface for reading user input
 const rl = readline.createInterface({

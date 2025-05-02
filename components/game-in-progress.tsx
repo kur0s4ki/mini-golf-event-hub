@@ -219,42 +219,42 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
 
                 {/* MAIN INFO CARD - expanded to take more space */}
                 {!showBonus && (
-                    <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-5 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-6 md:px-10 py-8 md:py-12 mt-6 mb-6 h-[70vh] justify-center">
+                    <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-3 md:gap-5 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-4 md:px-10 py-6 md:py-12 mt-4 mb-4 md:mt-6 md:mb-6 h-[70vh] justify-center overflow-y-auto">
                         {/* Team Name Sticker - Enhanced visibility */}
-                        <div className="absolute right-0 top-0 transform rotate-6 bg-[#E76F51] px-6 py-3 rounded-lg border-4 border-white shadow-xl z-50">
+                        <div className="absolute right-0 top-0 transform rotate-6 bg-[#E76F51] px-4 md:px-6 py-2 md:py-3 rounded-lg border-4 border-white shadow-xl z-50">
                             <div className="flex flex-col items-center">
-                                <span className="text-white font-badtyp text-sm uppercase tracking-wider">ÉQUIPE</span>
-                                <span className="text-white font-badtyp text-xl md:text-2xl drop-shadow-lg">
+                                <span className="text-white font-badtyp text-xs md:text-sm uppercase tracking-wider">ÉQUIPE</span>
+                                <span className="text-white font-badtyp text-lg md:text-2xl drop-shadow-lg">
                                     {teamName || "Aigles"}
                                 </span>
                             </div>
                         </div>
 
                         {/* Player */}
-                        <div className="flex flex-col items-center gap-1">
-                            <span className="text-[#FFD166] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1">GOLFEUR</span>
-                            <span className="text-white font-badtyp text-2xl md:text-4xl drop-shadow-lg animate-pop-in">{playerName || 'Jean Dupont'}</span>
+                        <div className="flex flex-col items-center gap-1 mt-2 md:mt-0">
+                            <span className="text-[#FFD166] font-badtyp text-base md:text-2xl tracking-widest uppercase mb-0 md:mb-1">GOLFEUR</span>
+                            <span className="text-white font-badtyp text-xl md:text-4xl drop-shadow-lg animate-pop-in">{playerName || 'Jean Dupont'}</span>
                         </div>
                         {/* Game Name */}
-                        <div className="flex flex-col items-center gap-1 mt-4">
-                            <span className="text-white/70 font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1">JEU</span>
-                            <span className="text-white font-badtyp text-2xl md:text-4xl drop-shadow-xl animate-pop-in">{gameName || 'Super Mini Golf'}</span>
+                        <div className="flex flex-col items-center gap-1 mt-2 md:mt-4">
+                            <span className="text-white/70 font-badtyp text-base md:text-2xl tracking-widest uppercase mb-0 md:mb-1">JEU</span>
+                            <span className="text-white font-badtyp text-xl md:text-4xl drop-shadow-xl animate-pop-in">{gameName || 'Super Mini Golf'}</span>
                         </div>
                         {/* Instructions with fixed dimensions */}
-                        <div className="flex flex-col items-center gap-1 w-full mt-6">
-                            <span className="text-[#FFD166] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1 flex items-center gap-2">
-                                <Lightbulb className="w-5 h-5 md:w-6 md:h-6 text-[#FFD166]" />CONSIGNES DE JEU
+                        <div className="flex flex-col items-center gap-1 w-full mt-3 md:mt-6">
+                            <span className="text-[#FFD166] font-badtyp text-base md:text-2xl tracking-widest uppercase mb-0 md:mb-1 flex items-center gap-2">
+                                <Lightbulb className="w-4 h-4 md:w-6 md:h-6 text-[#FFD166]" />CONSIGNES DE JEU
                             </span>
-                            <div className="w-full h-[200px] md:h-[250px] bg-black/30 rounded-2xl border border-white/10 shadow-lg">
-                                <div className="w-full h-full flex items-center justify-center px-5 md:px-8 py-6 md:py-10 overflow-auto">
-                                    <p className="text-white font-badtyp text-xl md:text-3xl text-center animate-fade-in">
+                            <div className="w-full h-[150px] md:h-[250px] bg-black/30 rounded-2xl border border-white/10 shadow-lg">
+                                <div className="w-full h-full flex items-center justify-center px-3 md:px-8 py-4 md:py-10 overflow-auto">
+                                    <p className="text-white font-badtyp text-lg md:text-3xl text-center animate-fade-in">
                                         {instructions || 'Visez le trou en un minimum de coups. Utilisez les rebonds pour éviter les obstacles !'}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         {/* Difficulty */}
-                        <div className="flex flex-col items-center gap-1 mt-6">
+                        <div className="flex flex-col items-center gap-1 mt-3 md:mt-6">
                             <span className="text-[#E76F51] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1 flex items-center gap-2"><Star className="w-5 h-5 md:w-6 md:h-6 text-[#E76F51]" />DIFFICULTÉ</span>
                             <div className="flex gap-1">
                                 <span className="text-white text-xl md:text-3xl">▲</span>
@@ -363,6 +363,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
 }
 
 export default GameInProgress
+
 
 
 

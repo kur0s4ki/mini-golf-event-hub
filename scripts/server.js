@@ -1,8 +1,8 @@
 const WebSocket = require("ws");
 const readline = require("readline");
 
-// Create a WebSocket server on port 8080
-const wss = new WebSocket.Server({ port: 8080 });
+// Create a WebSocket server on port 3045
+const wss = new WebSocket.Server({ port: 3045 });
 
 // Keep track of all connected clients
 const clients = new Set();
@@ -208,6 +208,6 @@ function processGameCommand(command) {
   }
 }
 
-console.log("WebSocket server started on port 8080");
+console.log("WebSocket server started on port 3045");
 console.log('Command interface ready. Type "help" for available commands.');
 handleCommand();

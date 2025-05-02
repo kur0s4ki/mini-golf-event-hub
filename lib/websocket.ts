@@ -10,7 +10,7 @@ class WebSocketClient {
 
   constructor() {
     // Use environment variable with fallback for WebSocket URL
-    this.url = process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost:8080";
+    this.url = process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost:8000";
     console.log("WebSocket URL:", this.url);
   }
 

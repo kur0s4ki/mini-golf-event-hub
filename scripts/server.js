@@ -1,8 +1,8 @@
 const WebSocket = require("ws");
 const readline = require("readline");
 
-// Create a WebSocket server on port 8080
-const wss = new WebSocket.Server({ port: 8080 });
+// Create a WebSocket server on port 8000
+const wss = new WebSocket.Server({ port: 8000 });
 
 // Keep track of all connected clients
 const clients = new Set();

@@ -7,11 +7,11 @@ class WebSocketClient {
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
   private reconnectTimeout: NodeJS.Timeout | null = null;
-  private messageQueue: Set<string> = new Set(); // Track recently sent messages
 
   constructor() {
     // Use environment variable with fallback for WebSocket URL
     this.url = process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost:8080";
+    console.log("WebSocket URL:", this.url);
   }
 
   connect() {
@@ -65,24 +65,6 @@ class WebSocketClient {
     this.ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-
-        // Create a message signature to detect duplicates
-        const msgSignature = JSON.stringify(data);
-
-        // Skip if we've seen this exact message recently (within last 500ms)
-        if (this.messageQueue.has(msgSignature)) {
-          console.log("Duplicate message detected, ignoring:", data);
-          return;
-        }
-
-        // Add to recent messages queue
-        this.messageQueue.add(msgSignature);
-
-        // Remove from queue after 500ms to prevent memory leaks
-        setTimeout(() => {
-          this.messageQueue.delete(msgSignature);
-        }, 500);
-
         console.log("Received message:", data);
 
         // Handle different message types
@@ -170,14 +152,10 @@ class WebSocketClient {
     }
   }
 
+  // This method is intentionally empty - we don't send messages back
   sendMessage(message: WebSocketMessage) {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify(message));
-    } else {
-      console.error("WebSocket is not connected, attempting to connect");
-      this.connect();
-      // Queue message to be sent after connection (could implement a proper queue system)
-    }
+    // Do nothing - the app should never send messages
+    console.log("Message sending disabled - app is passive receiver only");
   }
 
   isConnected(): boolean {

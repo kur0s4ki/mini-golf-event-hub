@@ -1,7 +1,7 @@
 const WebSocket = require("ws");
 const readline = require("readline");
 
-// Create a WebSocket server on port 3045
+// Create a WebSocket server on port 8080
 const wss = new WebSocket.Server({ port: 8080 });
 
 // Keep track of all connected clients
@@ -28,8 +28,8 @@ wss.on("connection", (ws) => {
       const message = JSON.parse(messageData);
       console.log("Received:", message);
 
-      // Broadcast the message to all connected clients (including the sender)
-      broadcastMessage(message);
+      // We don't need to broadcast messages from clients
+      // Just log them for debugging purposes
     } catch (error) {
       console.error("Error parsing message:", error);
       ws.send(
@@ -55,13 +55,7 @@ function broadcastMessage(message) {
 
   clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      // Add a property to track the last message sent to each client
-      if (!client.lastMessage || client.lastMessage !== messageStr) {
-        client.send(messageStr);
-        client.lastMessage = messageStr;
-      } else {
-        console.log("Prevented duplicate message broadcast");
-      }
+      client.send(messageStr);
     }
   });
 }

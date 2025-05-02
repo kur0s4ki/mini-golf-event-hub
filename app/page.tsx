@@ -37,94 +37,62 @@ export default function Home() {
 
             // Update state
             setPlayerName(player.displayName)
-            setTeamName(player.team.name) // Make sure this is correctly set
+            setTeamName(player.team.name)
             setGameName(player.gameName || "")
             setInstructions(player.instructions || "")
             setTimerSeconds(player.timer || 20)
             setGameState("playing")
-
-            // Send WebSocket message
-            wsClient.sendMessage({
-                action: "start",
-                teamName: player.team.name,
-                playerDisplayName: player.displayName,
-                timer: player.timer || 20
-            })
         }
 
         const handleWin = (points: number) => {
             console.log("Game won with points:", points)
-
-            // Update state
             setPoints(points)
             setGameState("won")
-
-            // Send WebSocket message
-            wsClient.sendMessage({
-                action: "win",
-                points: points
-            })
         }
 
         const handleLoss = (points: number) => {
             console.log("Game lost with points:", points)
-
-            // Update state
             setPoints(points)
             setGameState("lost")
-
-            // Send WebSocket message
-            wsClient.sendMessage({
-                action: "loss",
-                points: points
-            })
         }
 
         const handleTimeUp = (points: number) => {
             console.log("Time's up with points:", points)
-
-            // Update state
             setPoints(points)
             setGameState("timeUp")
-
-            // Send WebSocket message
-            wsClient.sendMessage({
-                action: "timeUp",
-                points: points
-            })
         }
 
         const handleReset = () => {
             console.log("Game reset")
-
-            // Reset state
             setGameState("waiting")
             setPlayerName("")
             setTeamName("")
             setGameName("")
             setInstructions("")
             setPoints(0)
-
-            // Send WebSocket message
-            wsClient.sendMessage({
-                action: "reset"
-            })
         }
 
-        // Register event handlers
+        const handleBonus = (bonusPoints: number) => {
+            console.log("Bonus points:", bonusPoints)
+            // Handle bonus points display
+        }
+
+        // Register event listeners
         gameEvents.on("start", handleStart)
         gameEvents.on("win", handleWin)
         gameEvents.on("loss", handleLoss)
         gameEvents.on("timeUp", handleTimeUp)
         gameEvents.on("reset", handleReset)
+        gameEvents.on("bonus", handleBonus)
 
-        // Cleanup event handlers when component unmounts
+        // Cleanup function to remove event listeners
         return () => {
             gameEvents.off("start", handleStart)
             gameEvents.off("win", handleWin)
             gameEvents.off("loss", handleLoss)
             gameEvents.off("timeUp", handleTimeUp)
             gameEvents.off("reset", handleReset)
+            gameEvents.off("bonus", handleBonus)
         }
     }, [])
 
@@ -204,4 +172,5 @@ export default function Home() {
         </div>
     )
 }
+
 

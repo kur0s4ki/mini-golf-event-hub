@@ -150,7 +150,7 @@ function processGameCommand(command) {
                     instructions ||
                     "Shoot through the castle gate as many times as possible.",
                   playerDisplayName: playerName || "Player 1",
-                  teamName: teamName || "Team Alpha", // Make sure teamName is included
+                  teamName: teamName || "Aigles", // Default to "Aigles" if teamName is not provided
                   timer: timer,
                 };
                 broadcastMessage(message);

@@ -136,7 +136,7 @@ export default function Home() {
             (window as any).testStart = () => {
                 gameEvents.emit("start", {
                     displayName: "John Doe",
-                    team: { name: "Eagles" }
+                    team: { name: "Aigles" }
                 })
             }
 

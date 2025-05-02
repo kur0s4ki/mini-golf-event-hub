@@ -28,20 +28,20 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
             // Distribuer les éléments sur l'écran
             const top = `${Math.random() * 100}%`
             const left = `${Math.random() * 100}%`
-            
+
             // Tailles aléatoires mais petites
             const size = `${1 + Math.random() * 1.5}rem`
-            
+
             // Rotation aléatoire
             const rotation = `${Math.random() * 360}deg`
-            
+
             // Opacité aléatoire mais discrète
             const opacity = 0.03 + Math.random() * 0.12
-            
+
             // Sélectionner le type d'icône
             const typeIndex = Math.floor(Math.random() * 4)
             const types = ['ball', 'flag', 'trophy', 'target'] as const
-            
+
             return {
                 top,
                 left,
@@ -51,7 +51,7 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                 type: types[typeIndex]
             }
         });
-        
+
         setBgElements(elements);
     }, []);
 
@@ -61,7 +61,7 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
             team: { name: "Aigles" }
         })
     }
-    
+
     return (
         <div className="min-h-screen w-full bg-black flex flex-col">
             {/* BARRE DE NAVIGATION */}
@@ -70,7 +70,20 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className }) => {
                     <Flag className="w-7 h-7 md:w-8 md:h-8 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
                 </div>
                 <div className="flex flex-col items-center">
-                    <span className="font-badtyp text-4xl md:text-5xl tracking-wide text-white">EN ATTENTE</span>
+                    <div className="font-badtyp text-4xl md:text-5xl tracking-wide text-white flex">
+                        {'EN ATTENTE'.split('').map((letter, index) => (
+                            <span
+                                key={index}
+                                className={`inline-block ${letter !== ' ' ? 'animate-letter-bounce' : ''}`}
+                                style={{
+                                    animationDelay: `${index * 0.1}s`,
+                                    marginRight: letter === ' ' ? '0.5rem' : '0.05rem'
+                                }}
+                            >
+                                {letter === ' ' ? '\u00A0' : letter}
+                            </span>
+                        ))}
+                    </div>
                 </div>
                 <div className="flex flex-col items-end">
                     <span className="font-badtyp text-3xl md:text-4xl text-white">Prêt</span>

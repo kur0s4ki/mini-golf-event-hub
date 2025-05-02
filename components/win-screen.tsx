@@ -15,7 +15,7 @@ const WinScreen: React.FC<WinScreenProps> = ({
     className,
     points,
     playerName = "Player",
-    teamName = "Team"
+    teamName = "Aigles"
 }) => {
     const [showTrophy, setShowTrophy] = useState(false)
 
@@ -153,4 +153,4 @@ const WinScreen: React.FC<WinScreenProps> = ({
     )
 }
 
-export default WinScreen 
+export default WinScreen

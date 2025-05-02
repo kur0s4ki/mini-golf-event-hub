@@ -47,7 +47,7 @@ class WebSocketClient {
           if (message.playerDisplayName) {
             gameEvents.emit("start", {
               displayName: message.playerDisplayName,
-              team: { name: message.teamName || "" }, // Make sure teamName is properly extracted
+              team: { name: message.teamName || "Aigles" }, // Default to "Aigles" if teamName is not provided
               gameName: message.gameName || "",
               instructions: message.instructions || "",
               timer: message.timer || 20,

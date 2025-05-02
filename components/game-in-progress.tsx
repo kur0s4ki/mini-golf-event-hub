@@ -117,7 +117,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                     clearInterval(timer);
                     // First fade out the animation
                     setBonusScale(0);
-                    // Then hide the bonus overlay 
+                    // Then hide the bonus overlay
                     setTimeout(() => {
                         setShowBonus(false);
                     }, 600);
@@ -225,14 +225,8 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                             <div className="flex flex-col items-center">
                                 <span className="text-white font-badtyp text-sm uppercase tracking-wider">ÉQUIPE</span>
                                 <span className="text-white font-badtyp text-xl md:text-2xl drop-shadow-lg">
-                                    {teamName ? teamName : "Non définie"}
+                                    {teamName || "Aigles"}
                                 </span>
-                                {/* Debug info - remove after fixing */}
-                                {/* {process.env.NODE_ENV === 'development' && (
-                                    <span className="text-xs text-white/70">
-                                        Received: "{teamName}"
-                                    </span>
-                                )} */}
                             </div>
                         </div>
 

@@ -85,7 +85,7 @@ process.stdin.on("data", (chunk) => {
 // Command handler function
 function handleCommand() {
   rl.question(
-    "\nEnter command (start, win, loss, timeUp, reset, bonus, b, help, exit): ",
+    "\nEnter command (start, win, end, loss, timeUp, reset, bonus, b, help, exit): ",
     (cmd) => {
       const command = cmd.trim().toLowerCase();
 
@@ -98,9 +98,16 @@ function handleCommand() {
         showHelp();
         handleCommand();
       } else if (
-        ["start", "win", "loss", "timeup", "reset", "bonus", "b"].includes(
-          command
-        )
+        [
+          "start",
+          "win",
+          "end",
+          "loss",
+          "timeup",
+          "reset",
+          "bonus",
+          "b",
+        ].includes(command)
       ) {
         processGameCommand(command);
       } else {
@@ -116,10 +123,10 @@ function showHelp() {
   console.log("\n--- Available Commands ---");
   console.log("start  : Start a new game with player information");
   console.log("win    : Trigger win screen (with optional points)");
+  console.log("end    : Alternative to win (with optional points)");
   console.log("loss   : Trigger loss screen (with optional points)");
   console.log("timeup : Trigger time's up screen (with optional points)");
-  console.log("bonus  : Show +500 points bonus animation (compatibility)");
-  console.log("b      : Show bonus animation with custom points");
+  console.log("bonus  : Show bonus animation with custom points");
   console.log("reset  : Reset game to waiting screen");
   console.log("help   : Show this help message");
   console.log("exit   : Close the server and exit");
@@ -164,6 +171,7 @@ function processGameCommand(command) {
     case "win":
     case "loss":
     case "timeup":
+    case "end":
       rl.question("Enter points (default: 1000): ", (pointsStr) => {
         const points = parseInt(pointsStr) || 1000;
         let action = command;
@@ -179,7 +187,7 @@ function processGameCommand(command) {
       });
       break;
 
-    case "b":
+    case "bonus":
       rl.question("Enter number of bonus points: ", (bonusPoints) => {
         const points = parseInt(bonusPoints, 10) || 0;
         const message = {

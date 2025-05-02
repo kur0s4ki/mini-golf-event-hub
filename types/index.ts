@@ -11,7 +11,7 @@ export interface PlayerInfo {
 export type GameState = "waiting" | "playing" | "won" | "lost" | "timeUp";
 
 export interface WebSocketMessage {
-  action: "start" | "win" | "loss" | "timeUp" | "reset";
+  action: "start" | "win" | "loss" | "timeUp" | "reset" | "end";
   teamName?: string;
   playerDisplayName?: string;
   timer?: number;

@@ -246,12 +246,18 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                             <span className="text-white/70 font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1">JEU</span>
                             <span className="text-white font-badtyp text-2xl md:text-4xl drop-shadow-xl animate-pop-in">{gameName || 'Super Mini Golf'}</span>
                         </div>
-                        {/* Instructions */}
-                        <div className="flex flex-col items-center gap-1 w-full mt-6 flex-1">
-                            <span className="text-[#FFD166] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1 flex items-center gap-2"><Lightbulb className="w-5 h-5 md:w-6 md:h-6 text-[#FFD166]" />CONSIGNES DE JEU</span>
-                            <p className="text-white font-badtyp text-xl md:text-3xl text-center rounded-2xl px-5 md:px-8 py-6 md:py-10 shadow-lg border-white/10 border animate-fade-in flex-1 flex items-center justify-center">
-                                {instructions || 'Visez le trou en un minimum de coups. Utilisez les rebonds pour éviter les obstacles !'}
-                            </p>
+                        {/* Instructions with fixed dimensions */}
+                        <div className="flex flex-col items-center gap-1 w-full mt-6">
+                            <span className="text-[#FFD166] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1 flex items-center gap-2">
+                                <Lightbulb className="w-5 h-5 md:w-6 md:h-6 text-[#FFD166]" />CONSIGNES DE JEU
+                            </span>
+                            <div className="w-full h-[200px] md:h-[250px] bg-black/30 rounded-2xl border border-white/10 shadow-lg">
+                                <div className="w-full h-full flex items-center justify-center px-5 md:px-8 py-6 md:py-10 overflow-auto">
+                                    <p className="text-white font-badtyp text-xl md:text-3xl text-center animate-fade-in">
+                                        {instructions || 'Visez le trou en un minimum de coups. Utilisez les rebonds pour éviter les obstacles !'}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                         {/* Difficulty */}
                         <div className="flex flex-col items-center gap-1 mt-6">
@@ -363,6 +369,10 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
 }
 
 export default GameInProgress
+
+
+
+
 
 
 

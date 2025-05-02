@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const readline = require("readline");
 
 // Create a WebSocket server on port 3045
-const wss = new WebSocket.Server({ port: 3045 });
+const wss = new WebSocket.Server({ port: 8080 });
 
 // Keep track of all connected clients
 const clients = new Set();
@@ -50,9 +50,18 @@ wss.on("connection", (ws) => {
 
 // Function to broadcast a message to all connected clients
 function broadcastMessage(message) {
+  // Create a string representation of the message for comparison
+  const messageStr = JSON.stringify(message);
+
   clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(message));
+      // Add a property to track the last message sent to each client
+      if (!client.lastMessage || client.lastMessage !== messageStr) {
+        client.send(messageStr);
+        client.lastMessage = messageStr;
+      } else {
+        console.log("Prevented duplicate message broadcast");
+      }
     }
   });
 }

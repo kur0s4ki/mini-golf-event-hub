@@ -29,7 +29,7 @@ class WebSocketClient {
       try {
         const data = JSON.parse(event.data);
         console.log("Received message:", data);
-        
+
         // Handle different message types
         this.handleIncomingMessage(data);
       } catch (error) {
@@ -43,53 +43,57 @@ class WebSocketClient {
     // Check if this is a game action message
     if (message.action) {
       switch (message.action) {
-        case 'start':
+        case "start":
           if (message.playerDisplayName) {
             gameEvents.emit("start", {
               displayName: message.playerDisplayName,
-              team: { name: "" },
-              gameName: message.gameName || '',
-              instructions: message.instructions || '',
-              timer: message.timer || 20
+              team: { name: message.teamName || "" }, // Make sure teamName is properly extracted
+              gameName: message.gameName || "",
+              instructions: message.instructions || "",
+              timer: message.timer || 20,
             });
           }
           break;
-          
-        case 'win':
-          if (typeof message.points === 'number') {
+
+        case "win":
+          if (typeof message.points === "number") {
             gameEvents.emit("win", message.points);
           }
           break;
-          
-        case 'loss':
-          if (typeof message.points === 'number') {
+
+        case "loss":
+          if (typeof message.points === "number") {
             gameEvents.emit("loss", message.points);
           }
           break;
-          
-        case 'timeUp':
-          if (typeof message.points === 'number') {
+
+        case "timeUp":
+          if (typeof message.points === "number") {
             gameEvents.emit("timeUp", message.points);
           }
           break;
-          
-        case 'reset':
+
+        case "reset":
           gameEvents.emit("reset", null);
           break;
-          
-        case 'bonus':
-          if (typeof message.points === 'number') {
+
+        case "bonus":
+          if (typeof message.points === "number") {
             gameEvents.emit("bonus", message.points);
           }
           break;
-          
-        case 'custom':
+
+        case "custom":
           // Handle custom commands like bonus
-          if (message.command === 'bonus') {
+          if (message.command === "bonus") {
             // Trigger the bonus display in GameInProgress component
-            const gameInProgress = document.querySelector('[data-bonus-trigger]');
+            const gameInProgress = document.querySelector(
+              "[data-bonus-trigger]"
+            );
             if (gameInProgress) {
-              const bonusButton = gameInProgress.querySelector('button[data-bonus]') as HTMLButtonElement;
+              const bonusButton = gameInProgress.querySelector(
+                "button[data-bonus]"
+              ) as HTMLButtonElement;
               bonusButton?.click();
             }
           }

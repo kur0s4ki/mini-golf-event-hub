@@ -10,6 +10,7 @@ interface GameInProgressProps {
     gameName?: string
     instructions?: string
     playerName?: string
+    teamName?: string // Add teamName prop
     difficulty?: string
     hideControls?: boolean // New prop to hide admin controls
 }
@@ -29,6 +30,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     gameName,
     instructions,
     playerName,
+    teamName, // Add teamName to destructuring
     difficulty = "Easy",
     hideControls = false // Default to showing controls
 }) => {
@@ -218,6 +220,22 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                 {/* MAIN INFO CARD - expanded to take more space */}
                 {!showBonus && (
                     <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-5 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-6 md:px-10 py-8 md:py-12 mt-6 mb-6 h-[70vh] justify-center">
+                        {/* Team Name Sticker - Enhanced visibility */}
+                        <div className="absolute right-0 top-0 transform rotate-6 bg-[#E76F51] px-6 py-3 rounded-lg border-4 border-white shadow-xl z-50">
+                            <div className="flex flex-col items-center">
+                                <span className="text-white font-badtyp text-sm uppercase tracking-wider">ÉQUIPE</span>
+                                <span className="text-white font-badtyp text-xl md:text-2xl drop-shadow-lg">
+                                    {teamName ? teamName : "Non définie"}
+                                </span>
+                                {/* Debug info - remove after fixing */}
+                                {/* {process.env.NODE_ENV === 'development' && (
+                                    <span className="text-xs text-white/70">
+                                        Received: "{teamName}"
+                                    </span>
+                                )} */}
+                            </div>
+                        </div>
+
                         {/* Player */}
                         <div className="flex flex-col items-center gap-1">
                             <span className="text-[#FFD166] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1">GOLFEUR</span>
@@ -345,5 +363,10 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
 }
 
 export default GameInProgress
+
+
+
+
+
 
 

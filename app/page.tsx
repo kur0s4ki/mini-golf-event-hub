@@ -37,7 +37,7 @@ export default function Home() {
 
             // Update state
             setPlayerName(player.displayName)
-            setTeamName(player.team.name)
+            setTeamName(player.team.name) // Make sure this is correctly set
             setGameName(player.gameName || "")
             setInstructions(player.instructions || "")
             setTimerSeconds(player.timer || 20)
@@ -166,7 +166,14 @@ export default function Home() {
                 <WaitingScreen />
             )}
             {gameState === "playing" && (
-                <GameInProgress initialTime={timerSeconds} gameName={gameName} instructions={instructions} playerName={playerName} hideControls={true} />
+                <GameInProgress
+                    initialTime={timerSeconds}
+                    gameName={gameName}
+                    instructions={instructions}
+                    playerName={playerName}
+                    teamName={teamName}
+                    hideControls={true}
+                />
             )}
             {gameState === "won" && (
                 <WinScreen
@@ -197,3 +204,4 @@ export default function Home() {
         </div>
     )
 }
+

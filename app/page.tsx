@@ -166,30 +166,30 @@ export default function Home() {
                 <WaitingScreen />
             )}
             {gameState === "playing" && (
-                <GameInProgress initialTime={timerSeconds} gameName={gameName} instructions={instructions} playerName={playerName} />
+                <GameInProgress initialTime={timerSeconds} gameName={gameName} instructions={instructions} playerName={playerName} hideControls={true} />
             )}
             {gameState === "won" && (
-                <WinScreen 
+                <WinScreen
                     points={points}
                     playerName={playerName}
                     teamName={teamName}
                 />
             )}
             {gameState === "lost" && (
-                <LossScreen 
+                <LossScreen
                     points={points}
                     playerName={playerName}
                     teamName={teamName}
                 />
             )}
             {gameState === "timeUp" && (
-                <TimeUpScreen 
+                <TimeUpScreen
                     points={points}
                     playerName={playerName}
                     teamName={teamName}
                 />
             )}
-            
+
             {/* Keyboard simulator for development */}
             {/* {process.env.NODE_ENV === 'development' && (
                 <KeyboardSimulator />

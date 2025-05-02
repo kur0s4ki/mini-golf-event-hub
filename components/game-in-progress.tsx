@@ -11,6 +11,7 @@ interface GameInProgressProps {
     instructions?: string
     playerName?: string
     difficulty?: string
+    hideControls?: boolean // New prop to hide admin controls
 }
 
 interface BackgroundElement {
@@ -22,13 +23,14 @@ interface BackgroundElement {
     type: 'ball' | 'flag' | 'trophy' | 'target'
 }
 
-const GameInProgress: React.FC<GameInProgressProps> = ({ 
-    className, 
+const GameInProgress: React.FC<GameInProgressProps> = ({
+    className,
     initialTime = 20, // 20 seconds
-    gameName, 
-    instructions, 
-    playerName, 
-    difficulty = "Easy"
+    gameName,
+    instructions,
+    playerName,
+    difficulty = "Easy",
+    hideControls = false // Default to showing controls
 }) => {
     const [timeRemaining, setTimeRemaining] = useState(initialTime)
     const [showBonus, setShowBonus] = useState(false)
@@ -37,7 +39,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     const [bonusCountdown, setBonusCountdown] = useState(5)
     const [bgElements, setBgElements] = useState<BackgroundElement[]>([]);
     const [bonusPoints, setBonusPoints] = useState<number>(10); // default to 10 for consistency
-    
+
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeRemaining(prev => {
@@ -51,10 +53,10 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                 return prev - 1;
             });
         }, 1000);
-        
+
         return () => clearInterval(timer);
     }, [totalScore]);
-    
+
     useEffect(() => {
         // Generate static background elements only on the client side
         const elements = Array.from({ length: 40 }, (_, index) => {
@@ -81,7 +83,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
         });
         setBgElements(elements);
     }, []);
-    
+
     useEffect(() => {
         // Listen for bonus events from websocket
         const handleBonus = (points: number) => {
@@ -98,13 +100,13 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     // Bonus animation effect
     useEffect(() => {
         if (!showBonus) return;
-        
+
         // Entrance animation
         setBonusScale(0);
         setTimeout(() => {
             setBonusScale(1);
         }, 100);
-        
+
         // Countdown to auto-hide
         setBonusCountdown(5);
         const timer = setInterval(() => {
@@ -122,39 +124,39 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                 return prev - 1;
             });
         }, 1000);
-        
+
         return () => clearInterval(timer);
     }, [showBonus]);
-    
+
     // Format time as MM:SS
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60)
         const remainingSeconds = seconds % 60
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
     }
-    
+
     // Determine if time is running low (10 seconds or less)
     const isTimeLow = timeRemaining <= 10
-    
+
     // Determine if time is critically low (5 seconds or less)
     const isCritical = timeRemaining <= 5
-    
+
     // Handle OK button click to go to win screen
     const handleOkClick = () => {
         // Only emit the current score, do not add extra points
         gameEvents.emit("win", totalScore);
     }
-    
+
     // Handle BONUS button click
     const handleBonusClick = () => {
         gameEvents.emit("bonus", 10);
     }
-    
+
     // Handle back button click
     const handleBackClick = () => {
         gameEvents.emit("reset", null);
     }
-    
+
     // Generate sparkle elements for the bonus effect
     const sparkles = Array.from({ length: 50 }, (_, index) => ({
         id: index,
@@ -169,7 +171,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
     return (
         <div className="min-h-screen h-screen w-full bg-black flex flex-col overflow-hidden">
             {/* BARRE DE NAVIGATION */}
-            <div className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{flex: '0 0 auto'}}>
+            <div className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{ flex: '0 0 auto' }}>
                 <div className="font-badtyp text-2xl md:text-4xl text-white flex items-center gap-2 md:gap-3">
                     <Flag className="w-6 h-6 md:w-8 md:h-8 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
                 </div>
@@ -213,34 +215,34 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                     ))}
                 </div>
 
-                {/* MAIN INFO CARD - compact and responsive */}
+                {/* MAIN INFO CARD - expanded to take more space */}
                 {!showBonus && (
-                    <div className="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center gap-3 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-4 md:px-8 py-6 md:py-8 mt-4 mb-4">
+                    <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-5 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-6 md:px-10 py-8 md:py-12 mt-6 mb-6 h-[70vh] justify-center">
                         {/* Player */}
-                        <div className="flex flex-col items-center gap-0.5">
-                            <span className="text-[#FFD166] font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5">GOLFEUR</span>
-                            <span className="text-white font-badtyp text-xl md:text-3xl drop-shadow-lg animate-pop-in">{playerName || 'Jean Dupont'}</span>
+                        <div className="flex flex-col items-center gap-1">
+                            <span className="text-[#FFD166] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1">GOLFEUR</span>
+                            <span className="text-white font-badtyp text-2xl md:text-4xl drop-shadow-lg animate-pop-in">{playerName || 'Jean Dupont'}</span>
                         </div>
                         {/* Game Name */}
-                        <div className="flex flex-col items-center gap-0.5">
-                            <span className="text-white/70 font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5">JEU</span>
-                            <span className="text-white font-badtyp text-xl md:text-3xl drop-shadow-xl animate-pop-in">{gameName || 'Super Mini Golf'}</span>
+                        <div className="flex flex-col items-center gap-1 mt-4">
+                            <span className="text-white/70 font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1">JEU</span>
+                            <span className="text-white font-badtyp text-2xl md:text-4xl drop-shadow-xl animate-pop-in">{gameName || 'Super Mini Golf'}</span>
                         </div>
                         {/* Instructions */}
-                        <div className="flex flex-col items-center gap-0.5 w-full">
-                            <span className="text-[#FFD166] font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5 flex items-center gap-1"><Lightbulb className="w-4 h-4 md:w-5 md:h-5 text-[#FFD166]" />CONSIGNES DE JEU</span>
-                            <p className="text-white font-badtyp text-base md:text-xl text-center rounded-2xl px-3 md:px-5 py-3 md:py-5 shadow-lg border-white/10 border animate-fade-in">
+                        <div className="flex flex-col items-center gap-1 w-full mt-6 flex-1">
+                            <span className="text-[#FFD166] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1 flex items-center gap-2"><Lightbulb className="w-5 h-5 md:w-6 md:h-6 text-[#FFD166]" />CONSIGNES DE JEU</span>
+                            <p className="text-white font-badtyp text-xl md:text-3xl text-center rounded-2xl px-5 md:px-8 py-6 md:py-10 shadow-lg border-white/10 border animate-fade-in flex-1 flex items-center justify-center">
                                 {instructions || 'Visez le trou en un minimum de coups. Utilisez les rebonds pour éviter les obstacles !'}
                             </p>
                         </div>
                         {/* Difficulty */}
-                        <div className="flex flex-col items-center gap-0.5">
-                            <span className="text-[#E76F51] font-badtyp text-sm md:text-lg tracking-widest uppercase mb-0.5 flex items-center gap-1"><Star className="w-4 h-4 md:w-5 md:h-5 text-[#E76F51]" />DIFFICULTÉ</span>
-                            <div className="flex gap-0.5">
-                                <span className="text-white text-lg md:text-2xl">▲</span>
-                                <span className="text-white text-lg md:text-2xl">▲</span>
-                                <span className="text-white text-lg md:text-2xl">▲</span>
-                                <span className="text-white text-lg md:text-2xl opacity-30">▲</span>
+                        <div className="flex flex-col items-center gap-1 mt-6">
+                            <span className="text-[#E76F51] font-badtyp text-lg md:text-2xl tracking-widest uppercase mb-1 flex items-center gap-2"><Star className="w-5 h-5 md:w-6 md:h-6 text-[#E76F51]" />DIFFICULTÉ</span>
+                            <div className="flex gap-1">
+                                <span className="text-white text-xl md:text-3xl">▲</span>
+                                <span className="text-white text-xl md:text-3xl">▲</span>
+                                <span className="text-white text-xl md:text-3xl">▲</span>
+                                <span className="text-white text-xl md:text-3xl opacity-30">▲</span>
                             </div>
                         </div>
                     </div>
@@ -271,7 +273,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                             ))}
                         </div>
                         {/* Bonus message and points now in column */}
-                        <div 
+                        <div
                             className="flex flex-col items-center justify-center gap-4 transition-all duration-700"
                             style={{ transform: `scale(${bonusScale})` }}
                         >
@@ -302,43 +304,46 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
             </div>
 
             {/* FOOTER (admin controls, hidden on display) */}
-            <div className="relative w-full py-3 md:py-6 px-6 md:px-12 z-20 flex justify-center items-center gap-4 md:gap-8" style={{flex: '0 0 auto'}}>
-                {/* Show only if not in display mode (optional: add a prop to hide) */}
-                <button 
-                    onClick={handleBackClick}
-                    data-action="reset"
-                    className={`bg-[#229954] p-3 md:p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all ${showBonus ? 'opacity-50 pointer-events-none' : ''}`}
-                >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </button>
-                {!showBonus && (
-                    <>
-                        <button 
-                            onClick={handleBonusClick}
-                            data-action="bonus"
-                            className="bg-[#FFD166] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
-                        >
-                            <div className="flex items-center gap-1 md:gap-2">
-                                <Gift className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                                <span>BONUS</span>
-                            </div>
-                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Afficher les points</span>
-                        </button>
-                        <button 
-                            onClick={handleOkClick}
-                            data-action="win"
-                            className="bg-[#E76F51] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
-                        >
-                            GAGNER
-                            <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Voir l'écran de victoire</span>
-                        </button>
-                    </>
-                )}
-            </div>
+            {!hideControls && (
+                <div className="relative w-full py-3 md:py-6 px-6 md:px-12 z-20 flex justify-center items-center gap-4 md:gap-8" style={{ flex: '0 0 auto' }}>
+                    <button
+                        onClick={handleBackClick}
+                        data-action="reset"
+                        className={`bg-[#229954] p-3 md:p-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all ${showBonus ? 'opacity-50 pointer-events-none' : ''}`}
+                    >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+                    {!showBonus && (
+                        <>
+                            <button
+                                onClick={handleBonusClick}
+                                data-action="bonus"
+                                className="bg-[#FFD166] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
+                            >
+                                <div className="flex items-center gap-1 md:gap-2">
+                                    <Gift className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                                    <span>BONUS</span>
+                                </div>
+                                <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Afficher les points</span>
+                            </button>
+                            <button
+                                onClick={handleOkClick}
+                                data-action="win"
+                                className="bg-[#E76F51] text-white font-badtyp text-lg md:text-xl px-6 md:px-8 py-3 md:py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all group"
+                            >
+                                GAGNER
+                                <span className="block text-xs md:text-sm mt-1 opacity-70 group-hover:opacity-100">Voir l'écran de victoire</span>
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
 
-export default GameInProgress 
+export default GameInProgress
+
+

@@ -125,7 +125,7 @@ export default function VerticalLeaderboardPage() {
             <div className="bg-[#1E293B] p-3 rounded-full">
               <Clock className="w-10 h-10 text-[#FFD166]" />
             </div>
-            <h2 className="font-badtyp text-5xl text-white">CURRENT GAMES</h2>
+            <h2 className="font-badtyp text-5xl text-white">EQUIPES EN COURS</h2>
           </div>
 
           <div style={{ height: 'calc(100% - 80px)' }}>

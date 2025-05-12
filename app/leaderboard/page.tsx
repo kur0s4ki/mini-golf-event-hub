@@ -77,7 +77,7 @@ export default function LeaderboardPage() {
         <div className="w-full">
           <div className="flex items-center gap-3 mb-4">
             <Clock className="w-8 h-8 text-[#FFD166]" />
-            <h2 className="font-badtyp text-3xl text-white">CURRENT GAMES</h2>
+            <h2 className="font-badtyp text-3xl text-white">EQUIPES EN COURS</h2>
           </div>
           <div className="bg-[#1E293B] rounded-xl border-4 border-white shadow-[0_8px_0_rgba(0,0,0,0.2)] p-4">
             <table className="w-full border-collapse">
@@ -120,24 +120,24 @@ export default function LeaderboardPage() {
         {/* TOP TEAMS SECTIONS */}
         <div className="grid grid-cols-1 gap-8">
           {/* TOP TEAMS OF THE DAY */}
-          <TopTeamsSection 
-            title="TOP TEAMS OF THE DAY" 
-            icon={<Calendar className="w-8 h-8 text-[#FFD166]" />} 
-            teams={leaderboardData?.topTeamsDay || []} 
+          <TopTeamsSection
+            title="TOP TEAMS OF THE DAY"
+            icon={<Calendar className="w-8 h-8 text-[#FFD166]" />}
+            teams={leaderboardData?.topTeamsDay || []}
           />
-          
+
           {/* TOP TEAMS OF THE MONTH */}
-          <TopTeamsSection 
-            title="TOP TEAMS OF THE MONTH" 
-            icon={<Calendar className="w-8 h-8 text-[#E76F51]" />} 
-            teams={leaderboardData?.topTeamsMonth || []} 
+          <TopTeamsSection
+            title="TOP TEAMS OF THE MONTH"
+            icon={<Calendar className="w-8 h-8 text-[#E76F51]" />}
+            teams={leaderboardData?.topTeamsMonth || []}
           />
-          
+
           {/* TOP TEAMS OF THE YEAR */}
-          <TopTeamsSection 
-            title="TOP TEAMS OF THE YEAR" 
-            icon={<Trophy className="w-8 h-8 text-[#26A69A]" />} 
-            teams={leaderboardData?.topTeamsYear || []} 
+          <TopTeamsSection
+            title="TOP TEAMS OF THE YEAR"
+            icon={<Trophy className="w-8 h-8 text-[#26A69A]" />}
+            teams={leaderboardData?.topTeamsYear || []}
           />
         </div>
       </div>

@@ -119,8 +119,8 @@ export default function VerticalLeaderboardPage() {
           </div>
         </div>
 
-        {/* CURRENT GAMES SECTION - Takes remaining space with fixed title height */}
-        <div className="w-full px-6 pb-6" style={{ height: 'calc(100% - 480px)' }}>
+        {/* CURRENT GAMES SECTION - Reduced height to leave space at bottom */}
+        <div className="w-full px-6 pb-6" style={{ height: 'calc(100% - 480px - 120px)' }}>
           <div className="flex items-center gap-4 px-2 py-3" style={{ height: '80px' }}>
             <div className="bg-[#1E293B] p-3 rounded-full">
               <Clock className="w-10 h-10 text-[#FFD166]" />
@@ -208,6 +208,15 @@ export default function VerticalLeaderboardPage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Bottom info section - animated text */}
+        <div className="w-full flex justify-center items-center" style={{ height: '80px' }}>
+          <div className="font-badtyp text-[#FFD166] text-3xl animate-pulse flex items-center gap-4">
+            <span className="inline-block animate-bounce text-4xl">↓</span>
+            <span>Badge pour plus d'informations</span>
+            <span className="inline-block animate-bounce text-4xl">↓</span>
           </div>
         </div>
       </div>

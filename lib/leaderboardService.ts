@@ -16,16 +16,21 @@ export interface LeaderboardData {
 // Mock data for development - replace with actual API calls
 const mockLeaderboardData: LeaderboardData = {
   currentGames: [
-    { teamName: "Aigles", numberOfPlayers: 4, score: 850, timeLeft: 170 },
+    {
+      teamName: "Aigles Royaux",
+      numberOfPlayers: 4,
+      score: 850,
+      timeLeft: 170,
+    },
     { teamName: "Faucons", numberOfPlayers: 3, score: 720, timeLeft: 90 },
     { teamName: "Lions", numberOfPlayers: 5, score: 680, timeLeft: 180 },
     { teamName: "Tigres", numberOfPlayers: 2, score: 540, timeLeft: 30 },
-    { teamName: "Panthères", numberOfPlayers: 6, score: 490, timeLeft: 150 },
-    { teamName: "Cobras", numberOfPlayers: 3, score: 450, timeLeft: 120 },
-    { teamName: "Dragons", numberOfPlayers: 4, score: 420, timeLeft: 45 },
-    { teamName: "Loups", numberOfPlayers: 5, score: 380, timeLeft: 75 },
-    { teamName: "Requins", numberOfPlayers: 3, score: 350, timeLeft: 140 },
-    { teamName: "Ours", numberOfPlayers: 4, score: 320, timeLeft: 20 },
+    { teamName: "Panthères", numberOfPlayers: 6, score: 490, timeLeft: 15 },
+    // { teamName: "Cobras", numberOfPlayers: 3, score: 450, timeLeft: 120 },
+    // { teamName: "Dragons", numberOfPlayers: 4, score: 420, timeLeft: 45 },
+    // { teamName: "Loups", numberOfPlayers: 5, score: 380, timeLeft: 75 },
+    // { teamName: "Requins", numberOfPlayers: 3, score: 350, timeLeft: 140 },
+    // { teamName: "Ours", numberOfPlayers: 4, score: 320, timeLeft: 20 },
     // { teamName: "Renards", numberOfPlayers: 2, score: 290, timeLeft: 160 },
     // { teamName: "Éléphants", numberOfPlayers: 6, score: 260, timeLeft: 85 },
     // { teamName: "Dauphins", numberOfPlayers: 3, score: 230, timeLeft: 130 },
@@ -34,7 +39,7 @@ const mockLeaderboardData: LeaderboardData = {
   ],
   topTeamsDay: [
     { teamName: "Panthères", numberOfPlayers: 4, score: 950 },
-    { teamName: "Aigles", numberOfPlayers: 4, score: 850 },
+    { teamName: "Aigles Royaux", numberOfPlayers: 4, score: 850 },
     { teamName: "Faucons", numberOfPlayers: 3, score: 720 },
     { teamName: "Lions", numberOfPlayers: 5, score: 680 },
     { teamName: "Tigres", numberOfPlayers: 2, score: 540 },
@@ -42,7 +47,7 @@ const mockLeaderboardData: LeaderboardData = {
   topTeamsMonth: [
     { teamName: "Panthères", numberOfPlayers: 4, score: 1050 },
     { teamName: "Cobras", numberOfPlayers: 6, score: 980 },
-    { teamName: "Aigles", numberOfPlayers: 4, score: 950 },
+    { teamName: "Aigles Royaux", numberOfPlayers: 4, score: 950 },
     { teamName: "Faucons", numberOfPlayers: 3, score: 920 },
     { teamName: "Lions", numberOfPlayers: 5, score: 880 },
   ],
@@ -50,7 +55,7 @@ const mockLeaderboardData: LeaderboardData = {
     { teamName: "Dragons", numberOfPlayers: 5, score: 1200 },
     { teamName: "Panthères", numberOfPlayers: 4, score: 1150 },
     { teamName: "Cobras", numberOfPlayers: 6, score: 1080 },
-    { teamName: "Aigles", numberOfPlayers: 4, score: 1050 },
+    { teamName: "Aigles Royaux", numberOfPlayers: 4, score: 1050 },
     { teamName: "Faucons", numberOfPlayers: 3, score: 1020 },
   ],
 };

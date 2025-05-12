@@ -88,8 +88,8 @@ export default function VerticalLeaderboardPage() {
 
       {/* MAIN CONTENT - Fixed heights for better control */}
       <div className="w-full flex flex-col" style={{ height: 'calc(100% - 100px)' }}>
-        {/* TOP TEAMS SECTIONS - Optimized height */}
-        <div className="w-full px-6 pt-4 pb-2" style={{ height: '400px' }}>
+        {/* TOP TEAMS SECTIONS - Increased height to fit content */}
+        <div className="w-full px-6 pt-4 pb-2" style={{ height: '480px' }}>
           <div className="bg-[#1E293B] rounded-2xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-4 h-full">
             <div className="grid grid-cols-3 gap-4 h-full">
               {/* TOP TEAMS OF THE DAY */}
@@ -120,19 +120,19 @@ export default function VerticalLeaderboardPage() {
         </div>
 
         {/* CURRENT GAMES SECTION - Takes remaining space with fixed title height */}
-        <div className="w-full px-6 pb-6" style={{ height: 'calc(100% - 400px)' }}>
+        <div className="w-full px-6 pb-6" style={{ height: 'calc(100% - 480px)' }}>
           <div className="flex items-center gap-4 px-2 py-3" style={{ height: '80px' }}>
             <div className="bg-[#1E293B] p-3 rounded-full">
               <Clock className="w-10 h-10 text-[#FFD166]" />
             </div>
-            <h2 className="font-badtyp text-5xl text-white">PARTIES EN COURS</h2>
+            <h2 className="font-badtyp text-5xl text-white">CURRENT GAMES</h2>
           </div>
 
           <div style={{ height: 'calc(100% - 80px)' }}>
             <div className="bg-[#1E293B] rounded-2xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-6 h-full">
               {leaderboardData?.currentGames.length === 0 ? (
                 <div className="py-8 text-center font-badtyp text-[#94A3B8] text-3xl h-full flex items-center justify-center">
-                  Aucune partie en cours
+                  No active games
                 </div>
               ) : (
                 <div className="grid grid-cols-1 h-full overflow-hidden">
@@ -140,50 +140,17 @@ export default function VerticalLeaderboardPage() {
                   <div
                     className="grid grid-cols-1 h-full"
                     style={{
-                      gap: `${Math.max(4, 16 - (leaderboardData?.currentGames?.length || 0))}px`,
-                      gridTemplateRows: `repeat(${Math.min(15, leaderboardData?.currentGames?.length || 0)}, 1fr)`
+                      gap: "16px",
+                      gridTemplateRows: `repeat(${Math.min(5, leaderboardData?.currentGames?.length || 0)}, 1fr)`
                     }}
                   >
-                    {leaderboardData?.currentGames.slice(0, 15).map((team, index) => {
-                      // Calculer la taille du texte en fonction du nombre d'équipes
-                      const teamCount = Math.min(15, leaderboardData?.currentGames?.length || 0);
-                      const textSizeClass = teamCount <= 5
-                        ? "text-3xl"
-                        : teamCount <= 8
-                          ? "text-2xl"
-                          : teamCount <= 12
-                            ? "text-xl"
-                            : "text-lg";
-
-                      const subtextSizeClass = teamCount <= 5
-                        ? "text-xl"
-                        : teamCount <= 8
-                          ? "text-lg"
-                          : teamCount <= 12
-                            ? "text-base"
-                            : "text-sm";
-
-                      // Ajuster le padding en fonction du nombre d'équipes
-                      const paddingClass = teamCount <= 5
-                        ? "p-4"
-                        : teamCount <= 8
-                          ? "p-3"
-                          : teamCount <= 12
-                            ? "p-2"
-                            : "p-1";
-
-                      // Ajuster la taille des icônes en fonction du nombre d'équipes
-                      const iconSize = teamCount <= 5
-                        ? "w-12 h-12"
-                        : teamCount <= 8
-                          ? "w-10 h-10"
-                          : teamCount <= 12
-                            ? "w-8 h-8"
-                            : "w-6 h-6";
-
-                      const userIconSize = teamCount <= 8
-                        ? "w-5 h-5"
-                        : "w-4 h-4";
+                    {leaderboardData?.currentGames.slice(0, 5).map((team, index) => {
+                      // Since we're only showing up to 5 teams, we can use larger sizes
+                      const textSizeClass = "text-4xl";
+                      const subtextSizeClass = "text-2xl";
+                      const paddingClass = "p-6";
+                      const iconSize = "w-16 h-16";
+                      const userIconSize = "w-6 h-6";
 
                       return (
                         <div
@@ -191,7 +158,7 @@ export default function VerticalLeaderboardPage() {
                           className={`${paddingClass} rounded-xl ${index % 2 === 0 ? "bg-[#2C3E50]/50" : "bg-[#1E293B]"} flex items-center ${index === 0 ? 'border-l-8 border-[#FFD166]' : ''}`}
                         >
                           {/* Team info - Left side */}
-                          <div className="flex items-center gap-2" style={{ width: '25%' }}>
+                          <div className="flex items-center gap-4" style={{ width: '35%' }}>
                             <div className={`${iconSize} rounded-full bg-[#475569] flex items-center justify-center flex-shrink-0`}>
                               <span className={`font-badtyp text-white ${subtextSizeClass}`}>{index + 1}</span>
                             </div>
@@ -207,9 +174,9 @@ export default function VerticalLeaderboardPage() {
                           {/* Progress bar - Middle */}
                           <div className="flex-1 px-4">
                             {team.timeLeft ? (
-                              <div className={`${teamCount <= 5 ? 'h-8' : teamCount <= 8 ? 'h-7' : teamCount <= 12 ? 'h-6' : 'h-5'} relative w-full`}>
+                              <div className="h-14 relative w-full">
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className={`font-badtyp text-white ${teamCount <= 8 ? 'text-xs' : 'text-[10px]'} z-10`}>
+                                  <div className="font-badtyp text-white text-xl z-10 font-bold">
                                     {Math.floor(team.timeLeft / 60)}:{(team.timeLeft % 60).toString().padStart(2, '0')}
                                   </div>
                                 </div>
@@ -231,7 +198,7 @@ export default function VerticalLeaderboardPage() {
                           </div>
 
                           {/* Score - Right side */}
-                          <div style={{ width: '15%' }} className="text-right">
+                          <div style={{ width: '12%' }} className="text-right">
                             <div className={`font-badtyp text-[#FFD166] ${textSizeClass} ${index === 0 ? 'leaderboard-score-pulse' : ''}`}>{team.score}</div>
                           </div>
                         </div>
@@ -274,8 +241,8 @@ function TopTeamsCompactSection({ title, icon, teams, accentColor }: TopTeamsSec
         <h2 className="font-badtyp text-2xl text-white">{title}</h2>
       </div>
 
-      {/* Contenu avec distribution égale de l'espace */}
-      <div className="grid grid-cols-1 grid-rows-3 gap-2" style={{ height: 'calc(100% - 40px)' }}>
+      {/* Contenu avec distribution égale de l'espace - increased gap */}
+      <div className="grid grid-cols-1 grid-rows-3 gap-4" style={{ height: 'calc(100% - 40px)' }}>
         {teams.length === 0 ? (
           <div className="py-4 text-center font-badtyp text-[#94A3B8] text-lg">
             Aucune donnée
@@ -304,7 +271,7 @@ function TopTeamsCompactSection({ title, icon, teams, accentColor }: TopTeamsSec
               return (
                 <div
                   key={index}
-                  className={`p-3 rounded-lg ${isPlaceholder ? 'bg-[#1E293B]/50' : 'bg-[#2C3E50]/50'} flex items-center justify-between ${index === 0 && !isPlaceholder ? 'animate-pulse-slow' : ''} h-full`}
+                  className={`p-4 rounded-lg ${isPlaceholder ? 'bg-[#1E293B]/50' : 'bg-[#2C3E50]/50'} flex items-center justify-between ${index === 0 && !isPlaceholder ? 'animate-pulse-slow' : ''} h-full`}
                   style={{ borderLeft: isPlaceholder ? '4px solid transparent' : `4px solid ${index === 0 ? accentColor : medalColor}` }}
                 >
                   <div className="flex items-center gap-3">

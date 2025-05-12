@@ -150,7 +150,6 @@ export default function VerticalLeaderboardPage() {
                       const subtextSizeClass = "text-2xl";
                       const paddingClass = "p-6";
                       const iconSize = "w-16 h-16";
-                      const userIconSize = "w-6 h-6";
 
                       return (
                         <div
@@ -162,12 +161,8 @@ export default function VerticalLeaderboardPage() {
                             <div className={`${iconSize} rounded-full bg-[#475569] flex items-center justify-center flex-shrink-0`}>
                               <span className={`font-badtyp text-white ${subtextSizeClass}`}>{index + 1}</span>
                             </div>
-                            <div className="truncate">
-                              <div className={`font-badtyp text-white ${textSizeClass} truncate`}>{team.teamName}</div>
-                              <div className="flex items-center gap-1">
-                                <Users className={`text-[#94A3B8] ${userIconSize} flex-shrink-0`} />
-                                <span className={`font-badtyp text-[#94A3B8] ${subtextSizeClass}`}>{team.numberOfPlayers}</span>
-                              </div>
+                            <div className="min-w-0">
+                              <div className={`font-badtyp text-white ${textSizeClass} break-words line-clamp-2`}>{team.teamName}</div>
                             </div>
                           </div>
 

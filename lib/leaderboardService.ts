@@ -4,6 +4,7 @@ export interface TeamScore {
   numberOfPlayers: number;
   score: number;
   timeLeft?: number; // Only for current games
+  initialDuration?: number; // Add initial duration
 }
 
 export interface LeaderboardData {
@@ -13,64 +14,61 @@ export interface LeaderboardData {
   topTeamsYear: TeamScore[];
 }
 
-// Mock data for development - replace with actual API calls
-const mockLeaderboardData: LeaderboardData = {
-  currentGames: [
-    {
-      teamName: "Aigles Royaux",
-      numberOfPlayers: 4,
-      score: 850,
-      timeLeft: 170,
-    },
-    { teamName: "Faucons", numberOfPlayers: 3, score: 720, timeLeft: 90 },
-    { teamName: "Lions", numberOfPlayers: 5, score: 680, timeLeft: 180 },
-    { teamName: "Tigres", numberOfPlayers: 2, score: 540, timeLeft: 30 },
-    { teamName: "Panthères", numberOfPlayers: 6, score: 490, timeLeft: 15 },
-    // { teamName: "Cobras", numberOfPlayers: 3, score: 450, timeLeft: 120 },
-    // { teamName: "Dragons", numberOfPlayers: 4, score: 420, timeLeft: 45 },
-    // { teamName: "Loups", numberOfPlayers: 5, score: 380, timeLeft: 75 },
-    // { teamName: "Requins", numberOfPlayers: 3, score: 350, timeLeft: 140 },
-    // { teamName: "Ours", numberOfPlayers: 4, score: 320, timeLeft: 20 },
-    // { teamName: "Renards", numberOfPlayers: 2, score: 290, timeLeft: 160 },
-    // { teamName: "Éléphants", numberOfPlayers: 6, score: 260, timeLeft: 85 },
-    // { teamName: "Dauphins", numberOfPlayers: 3, score: 230, timeLeft: 130 },
-    // { teamName: "Hiboux", numberOfPlayers: 4, score: 200, timeLeft: 15 },
-    // { teamName: "Castors", numberOfPlayers: 2, score: 180, timeLeft: 110 },
-  ],
-  topTeamsDay: [
-    { teamName: "Panthères", numberOfPlayers: 4, score: 950 },
-    { teamName: "Aigles Royaux", numberOfPlayers: 4, score: 850 },
-    { teamName: "Faucons", numberOfPlayers: 3, score: 720 },
-    { teamName: "Lions", numberOfPlayers: 5, score: 680 },
-    { teamName: "Tigres", numberOfPlayers: 2, score: 540 },
-  ],
-  topTeamsMonth: [
-    { teamName: "Panthères", numberOfPlayers: 4, score: 1050 },
-    { teamName: "Cobras", numberOfPlayers: 6, score: 980 },
-    { teamName: "Aigles Royaux", numberOfPlayers: 4, score: 950 },
-    { teamName: "Faucons", numberOfPlayers: 3, score: 920 },
-    { teamName: "Lions", numberOfPlayers: 5, score: 880 },
-  ],
-  topTeamsYear: [
-    { teamName: "Dragons", numberOfPlayers: 5, score: 1200 },
-    { teamName: "Panthères", numberOfPlayers: 4, score: 1150 },
-    { teamName: "Cobras", numberOfPlayers: 6, score: 1080 },
-    { teamName: "Aigles Royaux", numberOfPlayers: 4, score: 1050 },
-    { teamName: "Faucons", numberOfPlayers: 3, score: 1020 },
-  ],
-};
+// Interface for the raw data from the server
+interface ServerTeamData {
+  id: number;
+  name: string;
+  playerCount: number;
+  points: number;
+  session: {
+    id: number;
+    timestamp: string;
+    duration: number; // Assuming this is time left in seconds
+    status: "IN_PROGRESS" | "NOT_STARTED" | "FINISHED";
+  };
+  gamePlay: {
+    id: number;
+    description: string;
+    duration: number;
+  };
+  language: {
+    id: number;
+    code: string;
+    name: string;
+  };
+}
 
 // Function to fetch leaderboard data from the backend
 export async function fetchLeaderboardData(): Promise<LeaderboardData> {
   try {
-    // Replace this with actual API call when backend is ready
-    // const response = await fetch('your-backend-url/leaderboard');
-    // const data = await response.json();
-    // return data;
+    const response = await fetch('http://localhost:3001/teams');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const serverData: ServerTeamData[] = await response.json();
 
-    // For now, return mock data with a simulated delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return mockLeaderboardData;
+    // Transform server data into the format expected by the frontend
+    const currentGames: TeamScore[] = serverData
+      .filter(team => team.session.status === "IN_PROGRESS")
+      .map(team => ({
+        teamName: team.name,
+        numberOfPlayers: team.playerCount,
+        score: team.points,
+        // Assuming team.session.duration is the remaining time in seconds
+        timeLeft: team.session.duration,
+        initialDuration: team.gamePlay.duration // Map initial duration
+      }))
+      // Sort by score descending for current games display
+      .sort((a, b) => b.score - a.score);
+
+    // Return the transformed data - Top teams are empty as the endpoint doesn't provide them
+    return {
+      currentGames: currentGames,
+      topTeamsDay: [],
+      topTeamsMonth: [],
+      topTeamsYear: [],
+    };
+
   } catch (error) {
     console.error("Error fetching leaderboard data:", error);
     // Return empty data in case of error

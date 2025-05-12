@@ -5,9 +5,9 @@ import { Flag, Trophy, Calendar, Clock, Users } from "lucide-react"
 import { fetchLeaderboardData, LeaderboardData, TeamScore } from "@/lib/leaderboardService"
 
 // Function to generate dynamic gradient based on time left
-const getDynamicGradient = (timeLeft: number): string => {
-  // Maximum time is 180 seconds (3 minutes)
-  const maxTime = 180;
+const getDynamicGradient = (timeLeft: number, initialDuration: number): string => {
+  // Use initial duration as maxTime, default to 1 if duration is 0 or undefined
+  const maxTime = initialDuration > 0 ? initialDuration : 1;
 
   // Calculate percentage of time left
   const percentage = Math.min(100, (timeLeft / maxTime) * 100);
@@ -46,8 +46,8 @@ export default function VerticalLeaderboardPage() {
 
     fetchData()
 
-    // Set up polling to refresh data every 30 seconds
-    const intervalId = setInterval(fetchData, 30000)
+    // Set up polling to refresh data every second
+    const intervalId = setInterval(fetchData, 1000)
 
     return () => clearInterval(intervalId)
   }, [])
@@ -168,7 +168,7 @@ export default function VerticalLeaderboardPage() {
 
                           {/* Progress bar - Middle */}
                           <div className="flex-1 px-4">
-                            {team.timeLeft ? (
+                            {team.timeLeft !== undefined && team.initialDuration !== undefined ? (
                               <div className="h-14 relative w-full">
                                 <div className="absolute inset-0 flex items-center justify-center">
                                   <div className="font-badtyp text-white text-xl z-10 font-bold">
@@ -179,10 +179,12 @@ export default function VerticalLeaderboardPage() {
                                   <div
                                     className={`h-full rounded-lg ${index === 0 ? 'leaderboard-progress-pulse' : ''}`}
                                     style={{
-                                      width: `${Math.min(100, (team.timeLeft / 180) * 100)}%`,
-                                      transition: 'width 1s ease-in-out',
-                                      // Dynamic gradient based on time left
-                                      background: getDynamicGradient(team.timeLeft)
+                                      // Use initialDuration for width calculation, default to 1 to avoid division by zero
+                                      width: `${Math.min(100, ((team.timeLeft ?? 0) / (team.initialDuration > 0 ? team.initialDuration : 1)) * 100)}%`,
+                                      // Remove transition for instant updates
+                                      // transition: 'width 1s ease-in-out',
+                                      // Dynamic gradient based on time left relative to initial duration
+                                      background: getDynamicGradient(team.timeLeft, team.initialDuration)
                                     }}
                                   ></div>
                                 </div>

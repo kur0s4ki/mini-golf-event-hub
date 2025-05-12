@@ -9,7 +9,7 @@ app.use(cors());
 const teamsData = [
   {
     id: 13,
-    name: "h2c",
+    name: "AKATSUKI",
     playerCount: 1,
     points: 2105,
     session: {
@@ -31,7 +31,7 @@ const teamsData = [
   },
   {
     id: 11,
-    name: "h2c",
+    name: "LOS POTOS",
     playerCount: 2,
     points: 2057,
     session: {
@@ -53,7 +53,7 @@ const teamsData = [
   },
   {
     id: 14,
-    name: "h2c",
+    name: "MIKHRAR",
     playerCount: 1,
     points: 1845,
     session: {
@@ -75,7 +75,7 @@ const teamsData = [
   },
   {
     id: 10,
-    name: "h2c",
+    name: "HALLA CHOPIS",
     playerCount: 2,
     points: 800,
     session: {
@@ -109,12 +109,92 @@ setInterval(() => {
         // This will make it disappear from "equipes en cours"
         session.status = "FINISHED";
       }
+
+      if (session.duration === 1790) {
+        team.points = 4900; // Update points, not score
+        console.log(
+          `SERVER: Team ${team.name} has improved ranking with score ${team.points} - This should trigger all three endpoint calls (day, month, year)`
+        );
+
+        // Update top teams data when a team's score improves
+        // Check if the team's score is better than any in the top teams
+        const updateTopTeams = (topTeams) => {
+          // If the team's score is better than the lowest score in the top teams, add it
+          const lowestScore = Math.min(...topTeams.map((t) => t.score));
+          if (team.points > lowestScore) {
+            // Check if the team already exists in the top teams
+            const existingIndex = topTeams.findIndex(
+              (t) => t.teamName === team.name
+            );
+            if (existingIndex >= 0) {
+              // Update the team's score
+              topTeams[existingIndex].score = team.points;
+            } else {
+              // Add the team to the top teams
+              topTeams.push({
+                teamName: team.name,
+                numberOfPlayers: team.playerCount,
+                score: team.points,
+              });
+              // Remove the team with the lowest score
+              const lowestIndex = topTeams.findIndex(
+                (t) => t.score === lowestScore
+              );
+              if (lowestIndex >= 0) {
+                topTeams.splice(lowestIndex, 1);
+              }
+            }
+            // Sort the top teams by score (descending)
+            topTeams.sort((a, b) => b.score - a.score);
+          }
+        };
+
+        // Update all top teams
+        updateTopTeams(topTeamsDay);
+        updateTopTeams(topTeamsMonth);
+        updateTopTeams(topTeamsYear);
+      }
     }
   });
 }, 1000); // Run every second
 
+// Sample data for top teams
+const topTeamsDay = [
+  { teamName: "DOLPHIN", numberOfPlayers: 3, score: 3200 },
+  { teamName: "MAZAMIR", numberOfPlayers: 2, score: 2800 },
+  { teamName: "IBA9OYIN", numberOfPlayers: 4, score: 2500 },
+];
+
+const topTeamsMonth = [
+  { teamName: "LOS HOMBRES", numberOfPlayers: 3, score: 4100 },
+  { teamName: "3WAZA", numberOfPlayers: 2, score: 3900 },
+  { teamName: "LES SINGES", numberOfPlayers: 4, score: 3600 },
+];
+
+const topTeamsYear = [
+  { teamName: "SIDIAMROU MOUSSA", numberOfPlayers: 5, score: 5500 },
+  { teamName: "BOUTAZOUT", numberOfPlayers: 3, score: 5200 },
+  { teamName: "BOFAQOCH", numberOfPlayers: 4, score: 4800 },
+];
+
+// Endpoint for all teams
 app.get("/teams", (req, res) => {
   res.json(teamsData);
+});
+
+// Endpoint for top teams of the day
+app.get("/top-teams/day", (req, res) => {
+  res.json(topTeamsDay);
+});
+
+// Endpoint for top teams of the month
+app.get("/top-teams/month", (req, res) => {
+  res.json(topTeamsMonth);
+});
+
+// Endpoint for top teams of the year
+app.get("/top-teams/year", (req, res) => {
+  res.json(topTeamsYear);
 });
 
 app.listen(port, () => {

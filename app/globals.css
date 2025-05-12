@@ -113,7 +113,8 @@
 }
 
 @keyframes bounce-slow {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
@@ -177,7 +178,8 @@
 }
 
 @keyframes heartbeat {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   25% {
@@ -189,25 +191,36 @@
 }
 
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0) scale(1);
-    box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
   }
-  10%, 30%, 50%, 70%, 90% {
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     transform: translateX(-6px) scale(1.02);
-    box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3);
   }
-  20%, 40%, 60%, 80% {
+  20%,
+  40%,
+  60%,
+  80% {
     transform: translateX(6px) scale(1.02);
-    box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3);
   }
 }
 
 @keyframes flash {
-  0%, 50%, 100% {
+  0%,
+  50%,
+  100% {
     opacity: 1;
   }
-  25%, 75% {
+  25%,
+  75% {
     opacity: 0.8;
   }
 }
@@ -220,7 +233,8 @@
   10% {
     opacity: 0.7;
   }
-  60%, 80% {
+  60%,
+  80% {
     opacity: 0.9;
   }
   100% {
@@ -252,23 +266,27 @@
 }
 
 @keyframes sand-decrease {
-  0%, 5% {
-    d: path('M25 15H75V40C75 55 60 60 50 65C40 60 25 55 25 40V15Z');
+  0%,
+  5% {
+    d: path("M25 15H75V40C75 55 60 60 50 65C40 60 25 55 25 40V15Z");
     opacity: 0.7;
   }
-  95%, 100% {
-    d: path('M25 15H75V30C75 35 60 40 50 45C40 40 25 35 25 30V15Z');
+  95%,
+  100% {
+    d: path("M25 15H75V30C75 35 60 40 50 45C40 40 25 35 25 30V15Z");
     opacity: 0.5;
   }
 }
 
 @keyframes sand-increase {
-  0%, 5% {
-    d: path('M25 145L25 125C25 120 35 115 50 110C65 115 75 120 75 125V145H25Z');
+  0%,
+  5% {
+    d: path("M25 145L25 125C25 120 35 115 50 110C65 115 75 120 75 125V145H25Z");
     opacity: 0.7;
   }
-  95%, 100% {
-    d: path('M25 145L25 115C25 105 35 100 50 95C65 100 75 105 75 115V145H25Z');
+  95%,
+  100% {
+    d: path("M25 145L25 115C25 105 35 100 50 95C65 100 75 105 75 115V145H25Z");
     opacity: 0.9;
   }
 }
@@ -298,13 +316,47 @@
 }
 
 @keyframes bounce-very-slow {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
   50% {
     transform: translateY(-8px);
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes row-highlight {
+  0%,
+  100% {
+    background-color: rgba(44, 62, 80, 0.5);
+  }
+  50% {
+    background-color: rgba(44, 62, 80, 0.7);
+  }
+}
+
+@keyframes score-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 5px rgba(255, 209, 102, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 0 15px rgba(255, 209, 102, 0.8);
+  }
+}
+
+@keyframes progress-pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.2);
   }
 }
 
@@ -337,12 +389,25 @@
     animation: bounce-slow 3s ease-in-out infinite;
   }
 
+  /* Leaderboard specific animations */
+  .leaderboard-row-highlight {
+    animation: row-highlight 2s ease-in-out infinite;
+  }
+
+  .leaderboard-score-pulse {
+    animation: score-pulse 3s ease-in-out infinite;
+  }
+
+  .leaderboard-progress-pulse {
+    animation: progress-pulse 2s ease-in-out infinite;
+  }
+
   .confetti-piece {
     position: absolute;
     top: -20px;
     width: 10px;
     height: 10px;
-    background-color: #FFF;
+    background-color: #fff;
     animation: confetti-fall 5s linear infinite;
     opacity: 1;
     z-index: 10;
@@ -371,7 +436,7 @@
   .raindrop {
     position: absolute;
     top: -20px;
-    background-color: #94A3B8;
+    background-color: #94a3b8;
     border-radius: 0 0 2px 2px;
     animation: raindrop-fall 2s linear infinite;
     opacity: 0.7;
@@ -385,7 +450,7 @@
   }
 
   .animate-shake {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite;
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
   }
 
   .animate-flash {
@@ -407,15 +472,15 @@
   .animate-sand-fall-top {
     animation: sand-fall-top 1.5s ease-in infinite;
   }
-  
+
   .animate-sand-funnel {
     animation: sand-funnel 1s ease-in infinite;
   }
-  
+
   .animate-sand-decrease {
     animation: sand-decrease 10s ease-in-out infinite;
   }
-  
+
   .animate-sand-increase {
     animation: sand-increase 10s ease-in-out infinite;
   }

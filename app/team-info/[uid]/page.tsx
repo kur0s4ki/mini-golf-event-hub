@@ -131,9 +131,9 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="w-full flex flex-col pt-1 sm:pt-2" style={{ height: '84vh' }}>
+      <div className="w-full flex flex-col pt-1 sm:pt-2" style={{ height: '84vh', maxHeight: '84vh' }}>
         {/* Team name and info */}
-        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2">
+        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2" style={{ flex: '0 0 auto' }}>
           <div className="bg-[#1E293B] rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] sm:shadow-[0_12px_0_rgba(0,0,0,0.2)] p-2 sm:p-3 md:p-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
               <div>
@@ -158,7 +158,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
         </div>
 
         {/* Players scores table - Redesigned with games in rows and players in columns */}
-        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2 flex-grow">
+        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2" style={{ flex: '1 0 0' }}>
           <div className="bg-[#1E293B] rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] sm:shadow-[0_12px_0_rgba(0,0,0,0.2)] p-2 sm:p-3 md:p-4 h-full">
             {/* Title section */}
             <div className="flex items-center gap-2 mb-2 sm:mb-3">
@@ -169,7 +169,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
             </div>
 
             {/* Game scores grid */}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 h-[calc(100%-40px)]">
               {/* Header row with player names */}
               <div className="grid grid-cols-6 gap-2 border-b-2 border-[#475569] pb-2">
                 <div className="col-span-2 font-badtyp text-sm sm:text-base text-[#94A3B8] flex items-center">PARCOURS</div>
@@ -243,7 +243,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
         </div>
 
         {/* Player rankings section - Takes all available space */}
-        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2 flex-grow">
+        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2" style={{ flex: '1 0 0' }}>
           <div className="bg-[#1E293B] rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] sm:shadow-[0_12px_0_rgba(0,0,0,0.2)] p-2 sm:p-3 md:p-4 h-full">
             <div className="flex items-center gap-2 mb-2 sm:mb-3">
               <div className="bg-[#0F172A] p-2 rounded-full">
@@ -253,7 +253,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
             </div>
 
             {/* Sort players by total score and display ranking */}
-            <div className="space-y-2">
+            <div className="space-y-2 h-[calc(100%-40px)] flex flex-col justify-evenly">
               {[...teamInfo.players]
                 .sort((a, b) => b.totalScore - a.totalScore)
                 .map((player, index) => {
@@ -304,7 +304,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
       </div>
 
       {/* FOOTER - Countdown timer */}
-      <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2" style={{ height: '8vh' }}>
+      <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2" style={{ height: '8vh', flex: '0 0 auto' }}>
         <div className="bg-[#1E293B] rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] sm:shadow-[0_12px_0_rgba(0,0,0,0.2)] p-2 sm:p-3 h-full">
           <div className="flex items-center justify-between h-full">
             <div className="flex items-center gap-2">

@@ -37,7 +37,7 @@ const teamsData = [
     session: {
       id: 10,
       timestamp: "2025-04-06T02:54:41.013407Z",
-      duration: 100,
+      duration: 146,
       status: "IN_PROGRESS",
     },
     gamePlay: {
@@ -59,7 +59,7 @@ const teamsData = [
     session: {
       id: 13,
       timestamp: "2025-04-06T02:08:37.454883Z",
-      duration: 600,
+      duration: 1216,
       status: "IN_PROGRESS",
     },
     gamePlay: {
@@ -81,13 +81,13 @@ const teamsData = [
     session: {
       id: 9,
       timestamp: "2025-04-20T16:51:15.821315Z",
-      duration: 200,
+      duration: 250,
       status: "IN_PROGRESS",
     },
     gamePlay: {
       id: 1,
       description: "1h",
-      duration: 2800,
+      duration: 3600,
     },
     language: {
       id: 1,

@@ -76,26 +76,26 @@ export default function VerticalLeaderboardPage() {
 
   return (
     <div className="h-screen w-full bg-black flex flex-col overflow-hidden">
-      {/* HEADER - Fixed height */}
-      <div className="w-full flex items-center justify-between px-12 py-4 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{ height: '100px' }}>
-        <div className="font-badtyp text-5xl text-white flex items-center gap-3">
-          <Flag className="w-10 h-10 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
+      {/* HEADER - Responsive height using vh units */}
+      <div className="w-full flex items-center justify-between px-3 sm:px-6 md:px-12 py-2 sm:py-3 md:py-4 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30" style={{ height: '10vh' }}>
+        <div className="font-badtyp text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white flex items-center gap-2 sm:gap-3">
+          <Flag className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[#FFD166]" /> MINI <span className="text-[#FFD166]">Golf</span>
         </div>
-        <div className="font-badtyp text-5xl text-white flex items-center gap-3">
-          <Trophy className="w-10 h-10 text-[#FFD166]" /> CLASSEMENT
+        <div className="font-badtyp text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white flex items-center gap-2 sm:gap-3">
+          <Trophy className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[#FFD166]" /> CLASSEMENT
         </div>
       </div>
 
-      {/* MAIN CONTENT - Fixed heights for better control */}
-      <div className="w-full flex flex-col" style={{ height: 'calc(100% - 100px)' }}>
-        {/* TOP TEAMS SECTIONS - Increased height to fit content */}
-        <div className="w-full px-6 pt-4 pb-2" style={{ height: '480px' }}>
-          <div className="bg-[#1E293B] rounded-2xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-4 h-full">
-            <div className="grid grid-cols-3 gap-4 h-full">
+      {/* MAIN CONTENT - Responsive heights using vh units */}
+      <div className="w-full flex flex-col" style={{ height: '90vh' }}>
+        {/* TOP TEAMS SECTIONS - Responsive height */}
+        <div className="w-full px-3 sm:px-4 md:px-6 pt-2 sm:pt-3 md:pt-4 pb-1 sm:pb-2" style={{ height: '35vh' }}>
+          <div className="bg-[#1E293B] rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] sm:shadow-[0_12px_0_rgba(0,0,0,0.2)] p-2 sm:p-3 md:p-4 h-full">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 h-full">
               {/* TOP TEAMS OF THE DAY */}
               <TopTeamsCompactSection
                 title="TOP JOUR"
-                icon={<Calendar className="w-8 h-8 text-[#FFD166]" />}
+                icon={<Calendar className="w-full h-full text-[#FFD166]" />}
                 teams={leaderboardData?.topTeamsDay.slice(0, 3) || []}
                 accentColor="#FFD166"
               />
@@ -103,7 +103,7 @@ export default function VerticalLeaderboardPage() {
               {/* TOP TEAMS OF THE MONTH */}
               <TopTeamsCompactSection
                 title="TOP MOIS"
-                icon={<Calendar className="w-8 h-8 text-[#E76F51]" />}
+                icon={<Calendar className="w-full h-full text-[#E76F51]" />}
                 teams={leaderboardData?.topTeamsMonth.slice(0, 3) || []}
                 accentColor="#E76F51"
               />
@@ -111,7 +111,7 @@ export default function VerticalLeaderboardPage() {
               {/* TOP TEAMS OF THE YEAR */}
               <TopTeamsCompactSection
                 title="TOP ANNÉE"
-                icon={<Trophy className="w-8 h-8 text-[#26A69A]" />}
+                icon={<Trophy className="w-full h-full text-[#26A69A]" />}
                 teams={leaderboardData?.topTeamsYear.slice(0, 3) || []}
                 accentColor="#26A69A"
               />
@@ -119,17 +119,17 @@ export default function VerticalLeaderboardPage() {
           </div>
         </div>
 
-        {/* CURRENT GAMES SECTION - Reduced height to leave space at bottom */}
-        <div className="w-full px-6 pb-6" style={{ height: 'calc(100% - 480px - 120px)' }}>
-          <div className="flex items-center gap-4 px-2 py-3" style={{ height: '80px' }}>
-            <div className="bg-[#1E293B] p-3 rounded-full">
-              <Clock className="w-10 h-10 text-[#FFD166]" />
+        {/* CURRENT GAMES SECTION - Responsive height */}
+        <div className="w-full px-3 sm:px-4 md:px-6 pb-3 sm:pb-4 md:pb-6" style={{ height: '47vh' }}>
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 px-1 sm:px-2 py-1 sm:py-2 md:py-3" style={{ height: '8vh' }}>
+            <div className="bg-[#1E293B] p-1 sm:p-2 md:p-3 rounded-full">
+              <Clock className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[#FFD166]" />
             </div>
-            <h2 className="font-badtyp text-5xl text-white">EQUIPES EN COURS</h2>
+            <h2 className="font-badtyp text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white">EQUIPES EN COURS</h2>
           </div>
 
-          <div style={{ height: 'calc(100% - 80px)' }}>
-            <div className="bg-[#1E293B] rounded-2xl border-4 border-white shadow-[0_12px_0_rgba(0,0,0,0.2)] p-6 h-full">
+          <div style={{ height: 'calc(100% - 8vh)' }}>
+            <div className="bg-[#1E293B] rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] sm:shadow-[0_12px_0_rgba(0,0,0,0.2)] p-2 sm:p-4 md:p-6 h-full">
               {leaderboardData?.currentGames.length === 0 ? (
                 <div className="py-8 text-center font-badtyp text-[#94A3B8] text-3xl h-full flex items-center justify-center">
                   No active games
@@ -145,19 +145,20 @@ export default function VerticalLeaderboardPage() {
                     }}
                   >
                     {leaderboardData?.currentGames.slice(0, 5).map((team, index) => {
-                      // Since we're only showing up to 5 teams, we can use larger sizes
-                      const textSizeClass = "text-4xl";
-                      const subtextSizeClass = "text-2xl";
-                      const paddingClass = "p-6";
-                      const iconSize = "w-16 h-16";
+                      // Responsive text sizes using Tailwind's responsive classes
+                      const textSizeClass = "text-xl sm:text-2xl md:text-3xl lg:text-4xl";
+                      const subtextSizeClass = "text-base sm:text-lg md:text-xl lg:text-2xl";
+                      const paddingClass = "p-2 sm:p-3 md:p-4 lg:p-6";
+                      const iconSize = "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16";
+                      const borderSize = index === 0 ? 'border-l-4 sm:border-l-6 md:border-l-8 border-[#FFD166]' : '';
 
                       return (
                         <div
                           key={index}
-                          className={`${paddingClass} rounded-xl ${index % 2 === 0 ? "bg-[#2C3E50]/50" : "bg-[#1E293B]"} flex items-center ${index === 0 ? 'border-l-8 border-[#FFD166]' : ''}`}
+                          className={`${paddingClass} rounded-lg sm:rounded-xl ${index % 2 === 0 ? "bg-[#2C3E50]/50" : "bg-[#1E293B]"} flex items-center ${borderSize}`}
                         >
                           {/* Team info - Left side */}
-                          <div className="flex items-center gap-4" style={{ width: '35%' }}>
+                          <div className="flex items-center gap-2 sm:gap-3 md:gap-4" style={{ width: '35%' }}>
                             <div className={`${iconSize} rounded-full bg-[#475569] flex items-center justify-center flex-shrink-0`}>
                               <span className={`font-badtyp text-white ${subtextSizeClass}`}>{index + 1}</span>
                             </div>
@@ -167,17 +168,17 @@ export default function VerticalLeaderboardPage() {
                           </div>
 
                           {/* Progress bar - Middle */}
-                          <div className="flex-1 px-4">
+                          <div className="flex-1 px-2 sm:px-3 md:px-4">
                             {team.timeLeft !== undefined && team.initialDuration !== undefined ? (
-                              <div className="h-14 relative w-full">
+                              <div className="h-8 sm:h-10 md:h-12 lg:h-14 relative w-full">
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="font-badtyp text-white text-xl z-10 font-bold">
+                                  <div className="font-badtyp text-white text-sm sm:text-base md:text-lg lg:text-xl z-10 font-bold">
                                     {Math.floor(team.timeLeft / 60)}:{(team.timeLeft % 60).toString().padStart(2, '0')}
                                   </div>
                                 </div>
-                                <div className="w-full h-full bg-[#1E293B] rounded-lg overflow-hidden border border-[#475569]">
+                                <div className="w-full h-full bg-[#1E293B] rounded-md sm:rounded-lg overflow-hidden border border-[#475569]">
                                   <div
-                                    className={`h-full rounded-lg ${index === 0 ? 'leaderboard-progress-pulse' : ''}`}
+                                    className={`h-full rounded-md sm:rounded-lg ${index === 0 ? 'leaderboard-progress-pulse' : ''}`}
                                     style={{
                                       // Use initialDuration for width calculation, default to 1 to avoid division by zero
                                       width: `${Math.min(100, ((team.timeLeft ?? 0) / (team.initialDuration > 0 ? team.initialDuration : 1)) * 100)}%`,
@@ -208,12 +209,12 @@ export default function VerticalLeaderboardPage() {
           </div>
         </div>
 
-        {/* Bottom info section - animated text */}
-        <div className="w-full flex justify-center items-center" style={{ height: '80px' }}>
-          <div className="font-badtyp text-[#FFD166] text-3xl animate-pulse flex items-center gap-4">
-            <span className="inline-block animate-bounce text-4xl">↓</span>
+        {/* Bottom info section - animated text with responsive height */}
+        <div className="w-full flex justify-center items-center" style={{ height: '8vh' }}>
+          <div className="font-badtyp text-[#FFD166] text-lg sm:text-xl md:text-2xl lg:text-3xl animate-pulse flex items-center gap-2 sm:gap-3 md:gap-4">
+            <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
             <span>Badge pour plus d'informations</span>
-            <span className="inline-block animate-bounce text-4xl">↓</span>
+            <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
           </div>
         </div>
       </div>
@@ -239,18 +240,18 @@ function TopTeamsCompactSection({ title, icon, teams, accentColor }: TopTeamsSec
 
   return (
     <div className="flex flex-col h-full">
-      {/* Titre avec taille fixe */}
-      <div className="flex items-center gap-2 mb-2" style={{ height: '40px' }}>
-        <div className="bg-[#2C3E50] p-2 rounded-full">
-          {icon}
+      {/* Responsive title section */}
+      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2" style={{ height: '15%' }}>
+        <div className="bg-[#2C3E50] p-1 sm:p-2 rounded-full">
+          <div className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8">{icon}</div>
         </div>
-        <h2 className="font-badtyp text-2xl text-white">{title}</h2>
+        <h2 className="font-badtyp text-base sm:text-xl md:text-2xl text-white">{title}</h2>
       </div>
 
-      {/* Contenu avec distribution égale de l'espace - increased gap */}
-      <div className="grid grid-cols-1 grid-rows-3 gap-4" style={{ height: 'calc(100% - 40px)' }}>
+      {/* Responsive content with equal distribution */}
+      <div className="grid grid-cols-1 grid-rows-3 gap-1 sm:gap-2 md:gap-3 lg:gap-4" style={{ height: '85%' }}>
         {teams.length === 0 ? (
-          <div className="py-4 text-center font-badtyp text-[#94A3B8] text-lg">
+          <div className="py-2 sm:py-4 text-center font-badtyp text-[#94A3B8] text-sm sm:text-base md:text-lg">
             Aucune donnée
           </div>
         ) : (
@@ -273,33 +274,34 @@ function TopTeamsCompactSection({ title, icon, teams, accentColor }: TopTeamsSec
 
               // For placeholder teams, use a muted style
               const isPlaceholder = team.teamName === "---";
+              const borderWidth = isPlaceholder ? '2px sm:4px solid transparent' : `2px sm:4px solid ${index === 0 ? accentColor : medalColor}`;
 
               return (
                 <div
                   key={index}
-                  className={`p-4 rounded-lg ${isPlaceholder ? 'bg-[#1E293B]/50' : 'bg-[#2C3E50]/50'} flex items-center justify-between ${index === 0 && !isPlaceholder ? 'animate-pulse-slow' : ''} h-full`}
-                  style={{ borderLeft: isPlaceholder ? '4px solid transparent' : `4px solid ${index === 0 ? accentColor : medalColor}` }}
+                  className={`p-1 sm:p-2 md:p-3 lg:p-4 rounded-md sm:rounded-lg ${isPlaceholder ? 'bg-[#1E293B]/50' : 'bg-[#2C3E50]/50'} flex items-center justify-between ${index === 0 && !isPlaceholder ? 'animate-pulse-slow' : ''} h-full`}
+                  style={{ borderLeft: borderWidth }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
                     <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center"
+                      className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: isPlaceholder ? '#1E293B' : medalColor }}
                     >
-                      <span className="font-badtyp text-white text-sm">{position}</span>
+                      <span className="font-badtyp text-white text-xs sm:text-sm">{position}</span>
                     </div>
                     <div>
-                      <div className={`font-badtyp ${isPlaceholder ? 'text-[#475569]' : 'text-white'} text-xl`}>{team.teamName}</div>
+                      <div className={`font-badtyp ${isPlaceholder ? 'text-[#475569]' : 'text-white'} text-sm sm:text-base md:text-lg lg:text-xl`}>{team.teamName}</div>
                       {!isPlaceholder && (
-                        <div className="flex items-center gap-1 mt-1">
-                          <Users className="w-4 h-4 text-[#94A3B8]" />
-                          <span className="font-badtyp text-[#94A3B8] text-sm">{team.numberOfPlayers}</span>
+                        <div className="flex items-center gap-1 mt-0.5 sm:mt-1">
+                          <Users className="w-3 h-3 sm:w-4 sm:h-4 text-[#94A3B8]" />
+                          <span className="font-badtyp text-[#94A3B8] text-xs sm:text-sm">{team.numberOfPlayers}</span>
                         </div>
                       )}
                     </div>
                   </div>
                   {!isPlaceholder && (
                     <div
-                      className={`font-badtyp text-2xl px-3 py-1 rounded-lg ${index === 0 ? 'leaderboard-score-pulse' : ''}`}
+                      className={`font-badtyp text-sm sm:text-base md:text-xl lg:text-2xl px-1 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-md sm:rounded-lg ${index === 0 ? 'leaderboard-score-pulse' : ''}`}
                       style={{ color: accentColor, backgroundColor: 'rgba(0,0,0,0.3)' }}
                     >
                       {team.score}

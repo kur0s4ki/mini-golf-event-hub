@@ -221,7 +221,7 @@ export default function VerticalLeaderboardPage() {
         <div className="w-full flex justify-center items-center" style={{ height: '8vh' }}>
           <div
             className="font-badtyp text-[#FFD166] text-lg sm:text-xl md:text-2xl lg:text-3xl animate-pulse flex items-center gap-2 sm:gap-3 md:gap-4 cursor-pointer hover:text-white transition-colors"
-            onClick={() => router.push('/team-info/UID008')} // Hardcoded UID for simulation (Miguel from LOS POTOS)
+            onClick={() => router.push('/team-info/386')} // Hardcoded UID for Team 1 from the API
           >
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
             <span>Badge pour plus d'informations</span>

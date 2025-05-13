@@ -211,8 +211,9 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
                     return (
                       <div key={player.id} className="font-badtyp text-sm sm:text-base text-white text-center">
                         <div
-                          className={`rounded-md py-1 px-2 ${score > 0 ? (isHighestScore ? 'bg-[#FFD166]/20' : 'bg-[#0F172A]/50') : ''}
+                          className={`rounded-md py-1 px-1 mx-auto ${score > 0 ? (isHighestScore ? 'bg-[#FFD166]/20' : 'bg-[#0F172A]/50') : ''}
                                       ${isCurrentPlayer ? 'border border-[#FFD166]/50' : ''}`}
+                          style={{ width: '80%', minWidth: '24px' }}
                         >
                           {score > 0 ? score : '-'}
                         </div>
@@ -241,9 +242,10 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
                   return (
                     <div key={player.id} className="font-badtyp text-sm sm:text-base text-[#FFD166] text-center">
                       <div
-                        className={`rounded-md py-1 px-2 bg-[#0F172A]
+                        className={`rounded-md py-1 px-1 mx-auto bg-[#0F172A]
                                     ${isHighestTotal ? 'border-2 border-[#FFD166]' : ''}
                                     ${isCurrentPlayer ? 'shadow-[0_0_8px_rgba(255,209,102,0.5)]' : ''}`}
+                        style={{ width: '80%', minWidth: '24px' }}
                       >
                         {player.totalScore}
                       </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Flag, Trophy, Calendar, Clock, Users } from "lucide-react"
 import { fetchLeaderboardData, LeaderboardData, TeamScore } from "@/lib/leaderboardService"
 
@@ -25,6 +26,7 @@ const getDynamicGradient = (timeLeft: number, initialDuration: number): string =
 };
 
 export default function VerticalLeaderboardPage() {
+  const router = useRouter()
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -209,9 +211,12 @@ export default function VerticalLeaderboardPage() {
           </div>
         </div>
 
-        {/* Bottom info section - animated text with responsive height */}
+        {/* Bottom info section - animated text with responsive height and click handler */}
         <div className="w-full flex justify-center items-center" style={{ height: '8vh' }}>
-          <div className="font-badtyp text-[#FFD166] text-lg sm:text-xl md:text-2xl lg:text-3xl animate-pulse flex items-center gap-2 sm:gap-3 md:gap-4">
+          <div
+            className="font-badtyp text-[#FFD166] text-lg sm:text-xl md:text-2xl lg:text-3xl animate-pulse flex items-center gap-2 sm:gap-3 md:gap-4 cursor-pointer hover:text-white transition-colors"
+            onClick={() => router.push('/team-info/UID005')} // Hardcoded UID for simulation (Miguel from LOS POTOS)
+          >
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
             <span>Badge pour plus d'informations</span>
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>

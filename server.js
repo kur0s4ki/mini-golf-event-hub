@@ -10,7 +10,7 @@ const teamsData = [
   {
     id: 13,
     name: "AKATSUKI",
-    playerCount: 1,
+    playerCount: 4,
     points: 2105,
     session: {
       id: 12,
@@ -32,7 +32,7 @@ const teamsData = [
   {
     id: 11,
     name: "LOS POTOS",
-    playerCount: 2,
+    playerCount: 4,
     points: 2057,
     session: {
       id: 10,
@@ -54,7 +54,7 @@ const teamsData = [
   {
     id: 14,
     name: "MIKHRAR",
-    playerCount: 1,
+    playerCount: 4,
     points: 1845,
     session: {
       id: 13,
@@ -76,7 +76,7 @@ const teamsData = [
   {
     id: 10,
     name: "HALLA CHOPIS",
-    playerCount: 2,
+    playerCount: 4,
     points: 800,
     session: {
       id: 9,
@@ -177,6 +177,118 @@ const topTeamsYear = [
   { teamName: "BOFAQOCH", numberOfPlayers: 4, score: 4800 },
 ];
 
+// Sample player data for teams
+const playersData = {
+  // Team ID 13 - AKATSUKI
+  13: [
+    {
+      id: 101,
+      name: "Naruto",
+      uid: "UID001",
+      scores: [450, 380, 420, 300, 290, 265, 0],
+    },
+    {
+      id: 102,
+      name: "Sasuke",
+      uid: "UID002",
+      scores: [430, 360, 400, 280, 270, 245, 0],
+    },
+    {
+      id: 103,
+      name: "Sakura",
+      uid: "UID003",
+      scores: [410, 340, 380, 260, 250, 225, 0],
+    },
+    {
+      id: 104,
+      name: "Kakashi",
+      uid: "UID004",
+      scores: [470, 400, 440, 320, 310, 285, 0],
+    },
+  ],
+  // Team ID 11 - LOS POTOS
+  11: [
+    {
+      id: 105,
+      name: "Miguel",
+      uid: "UID005",
+      scores: [520, 410, 380, 350, 0, 0, 397],
+    },
+    {
+      id: 106,
+      name: "Carlos",
+      uid: "UID006",
+      scores: [480, 390, 360, 320, 0, 0, 0],
+    },
+    {
+      id: 107,
+      name: "Sofia",
+      uid: "UID007",
+      scores: [500, 400, 370, 335, 0, 0, 0],
+    },
+    {
+      id: 108,
+      name: "Elena",
+      uid: "UID008",
+      scores: [460, 380, 350, 310, 0, 0, 0],
+    },
+  ],
+  // Team ID 14 - MIKHRAR
+  14: [
+    {
+      id: 109,
+      name: "Ahmed",
+      uid: "UID009",
+      scores: [490, 420, 380, 300, 255, 0, 0],
+    },
+    {
+      id: 110,
+      name: "Youssef",
+      uid: "UID010",
+      scores: [470, 400, 360, 280, 235, 0, 0],
+    },
+    {
+      id: 111,
+      name: "Fatima",
+      uid: "UID011",
+      scores: [450, 380, 340, 260, 215, 0, 0],
+    },
+    {
+      id: 112,
+      name: "Amir",
+      uid: "UID012",
+      scores: [510, 440, 400, 320, 275, 0, 0],
+    },
+  ],
+  // Team ID 10 - HALLA CHOPIS
+  10: [
+    {
+      id: 113,
+      name: "Sophie",
+      uid: "UID013",
+      scores: [220, 180, 150, 0, 0, 0, 0],
+    },
+    {
+      id: 114,
+      name: "Emma",
+      uid: "UID014",
+      scores: [250, 0, 0, 0, 0, 0, 0],
+    },
+    {
+      id: 115,
+      name: "Lucas",
+      uid: "UID015",
+      scores: [200, 160, 130, 0, 0, 0, 0],
+    },
+    {
+      id: 116,
+      name: "Hugo",
+      uid: "UID016",
+      scores: [230, 170, 140, 0, 0, 0, 0],
+    },
+  ],
+};
+
 // Endpoint for all teams
 app.get("/teams", (req, res) => {
   res.json(teamsData);
@@ -195,6 +307,70 @@ app.get("/top-teams/month", (req, res) => {
 // Endpoint for top teams of the year
 app.get("/top-teams/year", (req, res) => {
   res.json(topTeamsYear);
+});
+
+// Endpoint for team info by UID
+app.get("/team-info/:uid", (req, res) => {
+  const uid = req.params.uid;
+
+  // Find the player with the given UID
+  let playerInfo = null;
+  let teamInfo = null;
+
+  // Search through all teams and players
+  for (const teamId in playersData) {
+    const players = playersData[teamId];
+    const player = players.find((p) => p.uid === uid);
+
+    if (player) {
+      playerInfo = player;
+      // Find the team this player belongs to
+      teamInfo = teamsData.find((t) => t.id === parseInt(teamId));
+      break;
+    }
+  }
+
+  if (!playerInfo || !teamInfo) {
+    return res.status(404).json({ error: "Player or team not found" });
+  }
+
+  // Get all players in this team
+  const teamPlayers = playersData[teamInfo.id];
+
+  // Calculate total score for each player
+  const playersWithTotalScore = teamPlayers.map((player) => {
+    const totalScore = player.scores.reduce((sum, score) => sum + score, 0);
+    return {
+      ...player,
+      totalScore,
+    };
+  });
+
+  // Sort players by total score (descending)
+  playersWithTotalScore.sort((a, b) => b.totalScore - a.totalScore);
+
+  // Return team and player information
+  res.json({
+    team: {
+      id: teamInfo.id,
+      name: teamInfo.name,
+      playerCount: teamInfo.playerCount,
+      points: teamInfo.points,
+      session: teamInfo.session,
+      gamePlay: teamInfo.gamePlay,
+    },
+    players: playersWithTotalScore,
+    currentPlayer: playerInfo.uid,
+    gameNames: [
+      "Fortress",
+      "Roller-Skate",
+      "Skee-Ball",
+      "Skyscraper",
+      "Spiral",
+      "Pinball",
+      "Pinko",
+    ],
+  });
 });
 
 app.listen(port, () => {

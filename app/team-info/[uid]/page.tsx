@@ -5,15 +5,27 @@ import { useRouter } from "next/navigation";
 import { Flag, Trophy, Users, Clock, ArrowLeft } from "lucide-react";
 
 // Define types for team info data
+interface GameScore {
+  gameId: number;
+  gameName: string;
+  points: number;
+}
+
 interface Player {
   id: number;
-  name: string;
-  uid: string;
-  scores: number[];
-  totalScore: number;
+  badgeId: string;
+  badgeActivated: boolean;
+  displayName: string;
+  avatarUrl: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  points: number;
+  scores: GameScore[];
 }
 
 interface TeamInfo {
+  currentPlayerId: number;
   team: {
     id: number;
     name: string;
@@ -30,10 +42,13 @@ interface TeamInfo {
       description: string;
       duration: number;
     };
+    language: {
+      id: number;
+      code: string;
+      name: string;
+    };
   };
   players: Player[];
-  currentPlayer: string;
-  gameNames: string[];
 }
 
 export default function TeamInfoPage({ params }: { params: { uid: string } }) {
@@ -41,13 +56,13 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(60); // 30 seconds countdown
+  const [timeLeft, setTimeLeft] = useState(15); // 15 seconds countdown
 
   // Fetch team info data
   useEffect(() => {
     const fetchTeamInfo = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/team-info/${params.uid}`);
+        const response = await fetch(`https://vmi693601.contaboserver.net:9010/api/players/team-player-info/${params.uid}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -170,89 +185,116 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
 
             {/* Game scores grid - Calculate dynamic grid columns based on player count */}
             <div className="grid grid-cols-1 gap-4">
-              {/* Header row with player names */}
-              <div
-                className={`grid gap-2 border-b-2 border-[#475569] pb-2`}
-                style={{
-                  gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
-                }}
-              >
-                <div className="font-badtyp text-sm sm:text-base text-[#94A3B8] flex items-center">PARCOURS</div>
-                {teamInfo.players.map((player) => (
-                  <div key={player.id} className="font-badtyp text-sm sm:text-base text-[#94A3B8] text-center flex flex-col items-center">
-                    <div className="truncate w-full text-center">{player.name}</div>
-                    {player.uid === teamInfo.currentPlayer && (
-                      <div className="w-2 h-2 rounded-full bg-[#FFD166] animate-pulse mt-1"></div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {/* Display all 7 games */}
+              {(() => {
+                // Define all 7 games that should be displayed
+                const allGames = [
+                  "Pinball",
+                  "Roller Skate",
+                  "Plinko",
+                  "Spiral",
+                  "Fortress",
+                  "Skee Ball",
+                  "Skycraper"
+                ];
 
-              {/* Game rows */}
-              {teamInfo.gameNames.map((game, gameIndex) => (
-                <div
-                  key={gameIndex}
-                  className={`grid gap-2 py-3 rounded-lg ${gameIndex % 2 === 0 ? 'bg-[#2C3E50]/50' : 'bg-[#1E293B]'}`}
-                  style={{
-                    gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
-                  }}
-                >
-                  {/* Game name */}
-                  <div className="font-badtyp text-sm sm:text-base text-white flex items-center">
-                    <div className="truncate">{game}</div>
-                  </div>
-
-                  {/* Player scores for this game */}
-                  {teamInfo.players.map((player) => {
-                    const score = player.scores[gameIndex];
-                    const isHighestScore = score === Math.max(...teamInfo.players.map(p => p.scores[gameIndex]).filter(s => s > 0));
-                    const isCurrentPlayer = player.uid === teamInfo.currentPlayer;
-
-                    return (
-                      <div key={player.id} className="font-badtyp text-sm sm:text-base text-white text-center">
-                        <div
-                          className={`rounded-md py-1 px-1 mx-auto ${score > 0 ? (isHighestScore ? 'bg-[#FFD166]/20' : 'bg-[#0F172A]/50') : ''}
-                                      ${isCurrentPlayer ? 'border border-[#FFD166]/50' : ''}`}
-                          style={{ width: '80%', minWidth: '24px' }}
-                        >
-                          {score > 0 ? score : '-'}
+                return (
+                  <>
+                    {/* Header row with player names */}
+                    <div
+                      className={`grid gap-2 border-b-2 border-[#475569] pb-2`}
+                      style={{
+                        gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
+                      }}
+                    >
+                      <div className="font-badtyp text-sm sm:text-base text-[#94A3B8] flex items-center">PARCOURS</div>
+                      {teamInfo.players.map((player) => (
+                        <div key={player.id} className="font-badtyp text-sm sm:text-base text-[#94A3B8] text-center flex flex-col items-center">
+                          <div className="truncate w-full text-center">{player.displayName}</div>
+                          {player.id === teamInfo.currentPlayerId && (
+                            <div className="w-2 h-2 rounded-full bg-[#FFD166] animate-pulse mt-1"></div>
+                          )}
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-
-              {/* Total scores row */}
-              <div
-                className="grid gap-2 py-3 rounded-lg bg-[#0F172A]/80 border-t-2 border-[#475569]"
-                style={{
-                  gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
-                }}
-              >
-                <div className="font-badtyp text-sm sm:text-base text-[#FFD166] flex items-center">
-                  <div className="truncate">TOTAL</div>
-                </div>
-
-                {/* Total scores for each player */}
-                {teamInfo.players.map((player) => {
-                  const isHighestTotal = player.totalScore === Math.max(...teamInfo.players.map(p => p.totalScore));
-                  const isCurrentPlayer = player.uid === teamInfo.currentPlayer;
-
-                  return (
-                    <div key={player.id} className="font-badtyp text-sm sm:text-base text-[#FFD166] text-center">
-                      <div
-                        className={`rounded-md py-1 px-1 mx-auto bg-[#0F172A]
-                                    ${isHighestTotal ? 'border-2 border-[#FFD166]' : ''}
-                                    ${isCurrentPlayer ? 'shadow-[0_0_8px_rgba(255,209,102,0.5)]' : ''}`}
-                        style={{ width: '80%', minWidth: '24px' }}
-                      >
-                        {player.totalScore}
-                      </div>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
+
+                    {/* Game rows */}
+                    {allGames.map((gameName, gameIndex) => (
+                      <div
+                        key={gameIndex}
+                        className={`grid gap-2 py-3 rounded-lg ${gameIndex % 2 === 0 ? 'bg-[#2C3E50]/50' : 'bg-[#1E293B]'}`}
+                        style={{
+                          gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
+                        }}
+                      >
+                        {/* Game name */}
+                        <div className="font-badtyp text-sm sm:text-base text-white flex items-center">
+                          <div className="truncate">{gameName}</div>
+                        </div>
+
+                        {/* Player scores for this game */}
+                        {teamInfo.players.map((player) => {
+                          const scoreObj = player.scores.find(s => s.gameName === gameName);
+                          const points = scoreObj ? scoreObj.points : 0;
+
+                          // Find highest score for this game among all players
+                          const allScoresForGame = teamInfo.players
+                            .map(p => p.scores.find(s => s.gameName === gameName)?.points || 0)
+                            .filter(s => s > 0);
+
+                          const highestScore = allScoresForGame.length > 0 ? Math.max(...allScoresForGame) : 0;
+                          const isHighestScore = points > 0 && points === highestScore;
+                          const isCurrentPlayer = player.id === teamInfo.currentPlayerId;
+
+                          return (
+                            <div key={player.id} className="font-badtyp text-sm sm:text-base text-white text-center">
+                              <div
+                                className={`rounded-md py-1 px-1 mx-auto ${points > 0 ? (isHighestScore ? 'bg-[#FFD166]/20' : 'bg-[#0F172A]/50') : ''}
+                                            ${isCurrentPlayer ? 'border border-[#FFD166]/50' : ''}`}
+                                style={{ width: '80%', minWidth: '24px' }}
+                              >
+                                {points > 0 ? points : '-'}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+
+                    {/* Total scores row */}
+                    <div
+                      className="grid gap-2 py-3 rounded-lg bg-[#0F172A]/80 border-t-2 border-[#475569]"
+                      style={{
+                        gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
+                      }}
+                    >
+                      <div className="font-badtyp text-sm sm:text-base text-[#FFD166] flex items-center">
+                        <div className="truncate">TOTAL</div>
+                      </div>
+
+                      {/* Total scores for each player */}
+                      {teamInfo.players.map((player) => {
+                        const highestPoints = Math.max(...teamInfo.players.map(p => p.points));
+                        const isHighestTotal = player.points === highestPoints;
+                        const isCurrentPlayer = player.id === teamInfo.currentPlayerId;
+
+                        return (
+                          <div key={player.id} className="font-badtyp text-sm sm:text-base text-[#FFD166] text-center">
+                            <div
+                              className={`rounded-md py-1 px-1 mx-auto bg-[#0F172A]
+                                          ${isHighestTotal ? 'border-2 border-[#FFD166]' : ''}
+                                          ${isCurrentPlayer ? 'shadow-[0_0_8px_rgba(255,209,102,0.5)]' : ''}`}
+                              style={{ width: '80%', minWidth: '24px' }}
+                            >
+                              {player.points}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -278,15 +320,15 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
                 }}
               >
                 {[...teamInfo.players]
-                  .sort((a, b) => b.totalScore - a.totalScore)
+                  .sort((a, b) => b.points - a.points)
                   .map((player, index) => {
-                    const isCurrentPlayer = player.uid === teamInfo.currentPlayer;
+                    const isCurrentPlayer = player.id === teamInfo.currentPlayerId;
                     const rankColors = ["#FFD166", "#94A3B8", "#CD7F32", "#475569"];
                     const rankColor = rankColors[index] || rankColors[3];
 
                     // Calculate percentage of max score
-                    const maxScore = Math.max(...teamInfo.players.map(p => p.totalScore));
-                    const scorePercentage = Math.round((player.totalScore / maxScore) * 100);
+                    const maxScore = Math.max(...teamInfo.players.map(p => p.points));
+                    const scorePercentage = maxScore > 0 ? Math.round((player.points / maxScore) * 100) : 0;
 
                     return (
                       <div
@@ -302,7 +344,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
                             <span className="font-badtyp text-white text-sm">{index + 1}</span>
                           </div>
                           <div className="font-badtyp text-white text-lg truncate">
-                            {player.name}
+                            {player.displayName}
                           </div>
                         </div>
 
@@ -313,7 +355,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
                               className="bg-gradient-to-r from-[#229954] to-[#FFD166] h-full rounded-full flex items-center justify-end pr-2"
                               style={{ width: `${scorePercentage}%` }}
                             >
-                              <span className="text-sm font-bold text-black">{player.totalScore}</span>
+                              <span className="text-sm font-bold text-black">{player.points}</span>
                             </div>
                           </div>
                         </div>

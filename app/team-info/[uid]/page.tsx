@@ -158,7 +158,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
         </div>
 
         {/* Players scores table - Redesigned with games in rows and players in columns */}
-        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2" style={{ flex: '1 0 0' }}>
+        <div className="w-full px-3 sm:px-4 md:px-6 py-1 sm:py-2" style={{ flex: '0 0 auto' }}>
           <div className="bg-[#1E293B] rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] sm:shadow-[0_12px_0_rgba(0,0,0,0.2)] p-2 sm:p-3 md:p-4 h-full">
             {/* Title section */}
             <div className="flex items-center gap-2 mb-2 sm:mb-3">
@@ -168,11 +168,16 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
               <h2 className="font-badtyp text-xl sm:text-2xl text-white">SCORES PAR JEUX</h2>
             </div>
 
-            {/* Game scores grid */}
-            <div className="grid grid-cols-1 gap-4 h-[calc(100%-40px)]">
+            {/* Game scores grid - Calculate dynamic grid columns based on player count */}
+            <div className="grid grid-cols-1 gap-4">
               {/* Header row with player names */}
-              <div className="grid grid-cols-6 gap-2 border-b-2 border-[#475569] pb-2">
-                <div className="col-span-2 font-badtyp text-sm sm:text-base text-[#94A3B8] flex items-center">PARCOURS</div>
+              <div
+                className={`grid gap-2 border-b-2 border-[#475569] pb-2`}
+                style={{
+                  gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
+                }}
+              >
+                <div className="font-badtyp text-sm sm:text-base text-[#94A3B8] flex items-center">PARCOURS</div>
                 {teamInfo.players.map((player) => (
                   <div key={player.id} className="font-badtyp text-sm sm:text-base text-[#94A3B8] text-center flex flex-col items-center">
                     <div className="truncate w-full text-center">{player.name}</div>
@@ -187,10 +192,13 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
               {teamInfo.gameNames.map((game, gameIndex) => (
                 <div
                   key={gameIndex}
-                  className={`grid grid-cols-6 gap-2 py-3 rounded-lg ${gameIndex % 2 === 0 ? 'bg-[#2C3E50]/50' : 'bg-[#1E293B]'}`}
+                  className={`grid gap-2 py-3 rounded-lg ${gameIndex % 2 === 0 ? 'bg-[#2C3E50]/50' : 'bg-[#1E293B]'}`}
+                  style={{
+                    gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
+                  }}
                 >
                   {/* Game name */}
-                  <div className="col-span-2 font-badtyp text-sm sm:text-base text-white flex items-center">
+                  <div className="font-badtyp text-sm sm:text-base text-white flex items-center">
                     <div className="truncate">{game}</div>
                   </div>
 
@@ -215,8 +223,13 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
               ))}
 
               {/* Total scores row */}
-              <div className="grid grid-cols-6 gap-2 py-3 rounded-lg bg-[#0F172A]/80 border-t-2 border-[#475569]">
-                <div className="col-span-2 font-badtyp text-sm sm:text-base text-[#FFD166] flex items-center">
+              <div
+                className="grid gap-2 py-3 rounded-lg bg-[#0F172A]/80 border-t-2 border-[#475569]"
+                style={{
+                  gridTemplateColumns: `minmax(100px, 2fr) ${teamInfo.players.map(() => '1fr').join(' ')}`
+                }}
+              >
+                <div className="font-badtyp text-sm sm:text-base text-[#FFD166] flex items-center">
                   <div className="truncate">TOTAL</div>
                 </div>
 
@@ -253,51 +266,60 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
             </div>
 
             {/* Sort players by total score and display ranking */}
-            <div className="space-y-2 h-[calc(100%-40px)] flex flex-col justify-evenly">
-              {[...teamInfo.players]
-                .sort((a, b) => b.totalScore - a.totalScore)
-                .map((player, index) => {
-                  const isCurrentPlayer = player.uid === teamInfo.currentPlayer;
-                  const rankColors = ["#FFD166", "#94A3B8", "#CD7F32", "#475569"];
-                  const rankColor = rankColors[index] || rankColors[3];
+            <div className="h-[calc(100%-40px)] flex flex-col">
+              {/* Calculate dynamic height for each player row based on number of players */}
+              <div
+                className="grid grid-cols-1 h-full"
+                style={{
+                  gap: "8px",
+                  gridTemplateRows: `repeat(${teamInfo.players.length}, 1fr)`
+                }}
+              >
+                {[...teamInfo.players]
+                  .sort((a, b) => b.totalScore - a.totalScore)
+                  .map((player, index) => {
+                    const isCurrentPlayer = player.uid === teamInfo.currentPlayer;
+                    const rankColors = ["#FFD166", "#94A3B8", "#CD7F32", "#475569"];
+                    const rankColor = rankColors[index] || rankColors[3];
 
-                  // Calculate percentage of max score
-                  const maxScore = Math.max(...teamInfo.players.map(p => p.totalScore));
-                  const scorePercentage = Math.round((player.totalScore / maxScore) * 100);
+                    // Calculate percentage of max score
+                    const maxScore = Math.max(...teamInfo.players.map(p => p.totalScore));
+                    const scorePercentage = Math.round((player.totalScore / maxScore) * 100);
 
-                  return (
-                    <div
-                      key={player.id}
-                      className={`flex flex-col sm:flex-row gap-2 p-2 rounded-lg ${isCurrentPlayer ? 'bg-[#FFD166]/10' : 'bg-[#2C3E50]/50'}`}
-                    >
-                      {/* Rank and name */}
-                      <div className="flex items-center gap-2 w-full sm:w-1/4">
-                        <div
-                          className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: rankColor }}
-                        >
-                          <span className="font-badtyp text-white text-sm">{index + 1}</span>
-                        </div>
-                        <div className="font-badtyp text-white text-lg truncate">
-                          {player.name}
-                        </div>
-                      </div>
-
-                      {/* Score bar */}
-                      <div className="flex-grow flex items-center">
-                        <div className="w-full bg-[#1E293B] h-6 rounded-full overflow-hidden">
+                    return (
+                      <div
+                        key={player.id}
+                        className={`flex flex-col sm:flex-row gap-2 p-2 rounded-lg ${isCurrentPlayer ? 'bg-[#FFD166]/10' : 'bg-[#2C3E50]/50'} h-full`}
+                      >
+                        {/* Rank and name */}
+                        <div className="flex items-center gap-2 w-full sm:w-1/4">
                           <div
-                            className="bg-gradient-to-r from-[#229954] to-[#FFD166] h-full rounded-full flex items-center justify-end pr-2"
-                            style={{ width: `${scorePercentage}%` }}
+                            className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: rankColor }}
                           >
-                            <span className="text-sm font-bold text-black">{player.totalScore}</span>
+                            <span className="font-badtyp text-white text-sm">{index + 1}</span>
+                          </div>
+                          <div className="font-badtyp text-white text-lg truncate">
+                            {player.name}
+                          </div>
+                        </div>
+
+                        {/* Score bar */}
+                        <div className="flex-grow flex items-center">
+                          <div className="w-full bg-[#1E293B] h-6 rounded-full overflow-hidden">
+                            <div
+                              className="bg-gradient-to-r from-[#229954] to-[#FFD166] h-full rounded-full flex items-center justify-end pr-2"
+                              style={{ width: `${scorePercentage}%` }}
+                            >
+                              <span className="text-sm font-bold text-black">{player.totalScore}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })
-              }
+                    );
+                  })
+                }
+              </div>
             </div>
           </div>
         </div>

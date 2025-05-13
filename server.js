@@ -205,6 +205,12 @@ const playersData = {
       uid: "UID004",
       scores: [470, 400, 440, 320, 310, 285, 0],
     },
+    {
+      id: 120,
+      name: "Itachi",
+      uid: "UID041",
+      scores: [450, 380, 420, 300, 290, 265, 0],
+    },
   ],
   // Team ID 11 - LOS POTOS
   11: [

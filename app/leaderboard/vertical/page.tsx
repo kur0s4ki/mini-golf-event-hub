@@ -166,6 +166,12 @@ export default function VerticalLeaderboardPage() {
                             </div>
                             <div className="min-w-0">
                               <div className={`font-badtyp text-white ${textSizeClass} break-words line-clamp-2`}>{team.teamName}</div>
+                              <div className="flex items-center gap-1 mt-0.5">
+                                <Users className="w-3 h-3 sm:w-4 sm:h-4 text-[#94A3B8]" />
+                                <span className="font-badtyp text-[#94A3B8] text-xs sm:text-sm">
+                                  {team.numberOfPlayers} {team.numberOfPlayers > 1 ? "joueurs" : "joueur"}
+                                </span>
+                              </div>
                             </div>
                           </div>
 
@@ -215,7 +221,7 @@ export default function VerticalLeaderboardPage() {
         <div className="w-full flex justify-center items-center" style={{ height: '8vh' }}>
           <div
             className="font-badtyp text-[#FFD166] text-lg sm:text-xl md:text-2xl lg:text-3xl animate-pulse flex items-center gap-2 sm:gap-3 md:gap-4 cursor-pointer hover:text-white transition-colors"
-            onClick={() => router.push('/team-info/UID005')} // Hardcoded UID for simulation (Miguel from LOS POTOS)
+            onClick={() => router.push('/team-info/UID008')} // Hardcoded UID for simulation (Miguel from LOS POTOS)
           >
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
             <span>Badge pour plus d'informations</span>
@@ -299,7 +305,9 @@ function TopTeamsCompactSection({ title, icon, teams, accentColor }: TopTeamsSec
                       {!isPlaceholder && (
                         <div className="flex items-center gap-1 mt-0.5 sm:mt-1">
                           <Users className="w-3 h-3 sm:w-4 sm:h-4 text-[#94A3B8]" />
-                          <span className="font-badtyp text-[#94A3B8] text-xs sm:text-sm">{team.numberOfPlayers}</span>
+                          <span className="font-badtyp text-[#94A3B8] text-xs sm:text-sm">
+                            {team.numberOfPlayers} {team.numberOfPlayers > 1 ? "joueurs" : "joueur"}
+                          </span>
                         </div>
                       )}
                     </div>

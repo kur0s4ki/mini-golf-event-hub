@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { Flag, Trophy, Calendar, Clock, Users } from "lucide-react"
 import { fetchLeaderboardData, LeaderboardData, TeamScore } from "@/lib/leaderboardService"
+import BadgeDialog from "@/components/badge-dialog"
 
 // Function to generate dynamic gradient based on time left
 const getDynamicGradient = (timeLeft: number, initialDuration: number): string => {
@@ -26,10 +26,10 @@ const getDynamicGradient = (timeLeft: number, initialDuration: number): string =
 };
 
 export default function VerticalLeaderboardPage() {
-  const router = useRouter()
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -221,13 +221,19 @@ export default function VerticalLeaderboardPage() {
         <div className="w-full flex justify-center items-center" style={{ height: '8vh' }}>
           <div
             className="font-badtyp text-[#FFD166] text-lg sm:text-xl md:text-2xl lg:text-3xl animate-pulse flex items-center gap-2 sm:gap-3 md:gap-4 cursor-pointer hover:text-white transition-colors"
-            onClick={() => router.push('/team-info/UID_7822577')} // Hardcoded badgeId for a player from the API
+            onClick={() => setIsDialogOpen(true)}
           >
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
             <span>Badge pour plus d'informations</span>
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
           </div>
         </div>
+
+        {/* Badge Dialog */}
+        <BadgeDialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
       </div>
     </div>
   )

@@ -17,3 +17,9 @@ export interface WebSocketMessage {
   timer?: number;
   points?: number;
 }
+
+export interface BadgeMessage {
+  type: string;
+  id: string;
+  timestamp: string;
+}

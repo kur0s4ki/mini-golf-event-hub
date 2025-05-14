@@ -224,7 +224,7 @@ export default function VerticalLeaderboardPage() {
             onClick={() => setIsDialogOpen(true)}
           >
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
-            <span>Badge pour plus d'informations</span>
+            <span>Scannez pour plus d'informations</span>
             <span className="inline-block animate-bounce text-xl sm:text-2xl md:text-3xl lg:text-4xl">↓</span>
           </div>
         </div>

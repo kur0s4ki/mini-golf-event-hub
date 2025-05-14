@@ -64,8 +64,13 @@ export default function BadgeListener() {
             console.log(`Badge detected: ${badgeMessage.id}`);
 
             // Navigate to team-info page with the badge ID
-            const badgeId = badgeMessage.id;
-            router.push(`/team-info/${badgeId}`);
+            const badgeId = badgeMessage.id.trim();
+            if (badgeId) {
+              console.log(`Navigating to team-info for badge ID: ${badgeId}`);
+              router.push(`/team-info/${badgeId}`);
+            } else {
+              console.error("Empty badge ID received");
+            }
           }
         } catch (error) {
           console.error("Error parsing WebSocket message:", error);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Flag, Trophy, Users, Clock, ArrowLeft } from "lucide-react";
+import { Flag, Trophy, Users, Clock } from "lucide-react";
 
 // Define types for team info data
 interface GameScore {
@@ -56,21 +56,52 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(15); // 15 seconds countdown
+  const [timeLeft, setTimeLeft] = useState(30); // 30 seconds countdown for normal view
+  const [errorTimeLeft, setErrorTimeLeft] = useState(5); // 5 seconds countdown for error view
 
   // Fetch team info data
   useEffect(() => {
     const fetchTeamInfo = async () => {
       try {
+        console.log(`Fetching team info for UID: ${params.uid}`);
         const response = await fetch(`https://vmi693601.contaboserver.net:9010/api/players/team-player-info/${params.uid}`);
+
+        // Handle HTTP errors
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          console.error(`HTTP error! status: ${response.status}`);
+          throw new Error("Impossible de charger les informations de l'équipe. Veuillez réessayer.");
         }
+
         const data = await response.json();
+        console.log("API response:", data);
+
+        // Check if the response is empty or doesn't have the expected structure
+        if (!data) {
+          console.error("Empty response from API");
+          throw new Error("Aucune information trouvée pour cet identifiant.");
+        }
+
+        if (!data.team || !data.players) {
+          console.error("Invalid response structure:", data);
+          throw new Error("Aucune information d'équipe trouvée pour cet identifiant.");
+        }
+
+        if (data.players.length === 0) {
+          console.error("No players found in team");
+          throw new Error("Aucun joueur trouvé dans cette équipe.");
+        }
+
+        // If we got here, the data is valid
         setTeamInfo(data);
+        setError(null);
       } catch (error) {
         console.error("Error fetching team info:", error);
-        setError("Failed to load team information. Please try again.");
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("Impossible de charger les informations de l'équipe. Veuillez réessayer.");
+        }
+        setTeamInfo(null);
       } finally {
         setLoading(false);
       }
@@ -79,13 +110,23 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
     fetchTeamInfo();
   }, [params.uid]);
 
-  // Auto-redirect back to leaderboard after 30 seconds
+  // Function to get dynamic gradient based on time left
+  const getCountdownGradient = (timeLeft: number) => {
+    const percentage = (timeLeft / 30) * 100;
+    return `linear-gradient(90deg, #FFD166 ${percentage}%, #1E293B ${percentage}%)`;
+  };
+
+  // Handle redirects for all cases
   useEffect(() => {
-    if (!loading && !error) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => {
+    if (loading) return; // Don't set up redirects while loading
+
+    // If there's an error or no team info, redirect after 5 seconds
+    if (error || (!teamInfo && !error)) {
+      console.log("Setting up error redirect timer");
+      const errorTimer = setInterval(() => {
+        setErrorTimeLeft((prev) => {
           if (prev <= 1) {
-            clearInterval(timer);
+            clearInterval(errorTimer);
             router.push("/leaderboard/vertical");
             return 0;
           }
@@ -93,16 +134,27 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
         });
       }, 1000);
 
-      return () => clearInterval(timer);
+      return () => clearInterval(errorTimer);
     }
-  }, [loading, error, router]);
+    // Otherwise, redirect after 30 seconds of normal viewing
+    else if (teamInfo) {
+      console.log("Setting up normal redirect timer");
+      const normalTimer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(normalTimer);
+            router.push("/leaderboard/vertical");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
 
-  // Function to get dynamic gradient based on time left
-  const getCountdownGradient = (timeLeft: number) => {
-    const percentage = (timeLeft / 30) * 100;
-    return `linear-gradient(90deg, #FFD166 ${percentage}%, #1E293B ${percentage}%)`;
-  };
+      return () => clearInterval(normalTimer);
+    }
+  }, [loading, error, teamInfo, router]);
 
+  // Loading state
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-black text-white">
@@ -111,40 +163,29 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
     );
   }
 
+  // Error state
   if (error) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-black text-white">
-        <div className="text-2xl font-bold font-badtyp text-red-500 mb-4">{error}</div>
-        <button
-          onClick={() => router.push("/leaderboard/vertical")}
-          className="px-4 py-2 bg-[#FFD166] text-black rounded-lg font-bold font-badtyp flex items-center gap-2"
-        >
-          <ArrowLeft size={20} /> Retour au Classement
-        </button>
+        <div className="text-3xl font-bold font-badtyp text-[#E76F51] mb-4">Oops!</div>
+        <div className="text-2xl font-bold font-badtyp mb-8 text-center px-4">{error}</div>
+        <div className="text-lg font-badtyp text-[#94A3B8] animate-pulse">
+          Retour au classement dans {errorTimeLeft} secondes...
+        </div>
       </div>
     );
   }
-
-  // Handle case when no team info is found
-  useEffect(() => {
-    if (!loading && !error && !teamInfo) {
-      // Redirect back to leaderboard after 5 seconds
-      const timer = setTimeout(() => {
-        router.push("/leaderboard/vertical");
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [loading, error, teamInfo, router]);
 
   // Show error message if no team info is found
   if (!teamInfo && !loading && !error) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-black text-white">
         <div className="text-3xl font-bold font-badtyp text-[#E76F51] mb-4">Oops!</div>
-        <div className="text-2xl font-bold font-badtyp mb-8">Aucune information d'équipe trouvée</div>
+        <div className="text-2xl font-bold font-badtyp mb-8 text-center px-4">
+          Aucune information d'équipe trouvée pour cet identifiant.
+        </div>
         <div className="text-lg font-badtyp text-[#94A3B8] animate-pulse">
-          Retour au classement dans 5 secondes...
+          Retour au classement dans {errorTimeLeft} secondes...
         </div>
       </div>
     );

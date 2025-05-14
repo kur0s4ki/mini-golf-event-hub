@@ -17,7 +17,8 @@ export default function BadgeDialog({ isOpen, onClose }: BadgeDialogProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (badgeId.trim()) {
-      router.push(`/team-info/${badgeId}`);
+      console.log(`Navigating to team-info for badge ID: ${badgeId}`);
+      router.push(`/team-info/${badgeId.trim()}`);
       onClose();
     }
   };
@@ -26,7 +27,7 @@ export default function BadgeDialog({ isOpen, onClose }: BadgeDialogProps) {
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
       <div className="bg-[#1E293B] rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] p-6 max-w-md w-full mx-4">
         <h2 className="font-badtyp text-2xl text-[#FFD166] mb-4">Entrer un Badge ID</h2>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="badgeId" className="block font-badtyp text-white mb-2">
@@ -42,7 +43,7 @@ export default function BadgeDialog({ isOpen, onClose }: BadgeDialogProps) {
               autoFocus
             />
           </div>
-          
+
           <div className="flex justify-end gap-3 mt-6">
             <button
               type="button"

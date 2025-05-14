@@ -125,12 +125,34 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
     );
   }
 
-  if (!teamInfo) {
+  // Handle case when no team info is found
+  useEffect(() => {
+    if (!loading && !error && !teamInfo) {
+      // Redirect back to leaderboard after 5 seconds
+      const timer = setTimeout(() => {
+        router.push("/leaderboard/vertical");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading, error, teamInfo, router]);
+
+  // Show error message if no team info is found
+  if (!teamInfo && !loading && !error) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-black text-white">
-        <div className="text-2xl font-bold font-badtyp">Aucune information d'équipe trouvée</div>
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-black text-white">
+        <div className="text-3xl font-bold font-badtyp text-[#E76F51] mb-4">Oops!</div>
+        <div className="text-2xl font-bold font-badtyp mb-8">Aucune information d'équipe trouvée</div>
+        <div className="text-lg font-badtyp text-[#94A3B8] animate-pulse">
+          Retour au classement dans 5 secondes...
+        </div>
       </div>
     );
+  }
+
+  // Safety check - don't render the main content if teamInfo is null
+  if (!teamInfo) {
+    return null;
   }
 
   return (

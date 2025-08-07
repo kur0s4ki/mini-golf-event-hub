@@ -65,8 +65,10 @@ async function fetchTopTeams(
 
   try {
     console.log(`CLIENT: Fetching top teams for ${period}`);
+    const apiBaseUrl =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://172.16.10.201:8000/api";
     const response = await fetch(
-      `http://172.16.10.201:8000/api/teams/top/${apiPeriod}?limit=3`
+      `${apiBaseUrl}/teams/top/${apiPeriod}?limit=3`
     );
     if (!response.ok) {
       console.error(
@@ -102,8 +104,10 @@ export async function fetchLeaderboardData(): Promise<LeaderboardData> {
 
   try {
     // --- Step 1: Always Fetch Current Games ---
+    const apiBaseUrl =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://172.16.10.201:8000/api";
     const teamsResponse = await fetch(
-      "http://172.16.10.201:8000/api/teams/top/active/daily?limit=10"
+      `${apiBaseUrl}/teams/top/active/daily?limit=10`
     );
     if (!teamsResponse.ok) {
       console.error(

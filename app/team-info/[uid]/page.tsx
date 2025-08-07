@@ -64,7 +64,8 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
     const fetchTeamInfo = async () => {
       try {
         console.log(`Fetching team info for UID: ${params.uid}`);
-        const response = await fetch(`http://172.16.10.201:8000/api/players/team-player-info/${params.uid}`);
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://172.16.10.201:8000/api';
+        const response = await fetch(`${apiBaseUrl}/players/team-player-info/${params.uid}`);
 
         // Handle HTTP errors
         if (!response.ok) {

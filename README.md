@@ -60,9 +60,38 @@ This project is built with .
 - shadcn-ui
 - Tailwind CSS
 
+## Environment Configuration
+
+This project uses environment variables to configure API endpoints.
+
+### Local Development
+
+1. Copy `.env.example` to `.env.local`:
+
+   ```sh
+   cp .env.example .env.local
+   ```
+
+2. Update the values in `.env.local` to match your local backend server:
+   ```
+   NEXT_PUBLIC_API_BASE_URL=http://172.16.10.201:8000/api
+   NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:8000/ws
+   ```
+
+### Production Deployment
+
+When deploying to Vercel or other platforms, set the following environment variables:
+
+- `NEXT_PUBLIC_API_BASE_URL`: Your production API URL (e.g., `https://your-backend-domain.com/api`)
+- `NEXT_PUBLIC_WEBSOCKET_URL`: Your production WebSocket URL (e.g., `wss://your-websocket-domain.com/ws`)
+
+**Important**: The API server must be publicly accessible when deploying to production platforms like Vercel.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/e4565ea4-d0f7-42c9-aaed-4318158ac550) and click on Share -> Publish.
+
+**Note**: Make sure to configure the environment variables in your deployment platform to point to your publicly accessible backend server.
 
 ## I want to use a custom domain - is that possible?
 

@@ -64,7 +64,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
     const fetchTeamInfo = async () => {
       try {
         console.log(`Fetching team info for UID: ${params.uid}`);
-        const response = await fetch(`https://vmi693601.contaboserver.net:9010/api/players/team-player-info/${params.uid}`);
+        const response = await fetch(`http://172.16.10.201:8000/api/players/team-player-info/${params.uid}`);
 
         // Handle HTTP errors
         if (!response.ok) {

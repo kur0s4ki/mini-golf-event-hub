@@ -66,7 +66,7 @@ async function fetchTopTeams(
   try {
     console.log(`CLIENT: Fetching top teams for ${period}`);
     const response = await fetch(
-      `https://vmi693601.contaboserver.net:9010/api/teams/top/${apiPeriod}?limit=3`
+      `http://172.16.10.201:8000/api/teams/top/${apiPeriod}?limit=3`
     );
     if (!response.ok) {
       console.error(
@@ -103,7 +103,7 @@ export async function fetchLeaderboardData(): Promise<LeaderboardData> {
   try {
     // --- Step 1: Always Fetch Current Games ---
     const teamsResponse = await fetch(
-      "https://vmi693601.contaboserver.net:9010/api/teams/top/active/daily?limit=10"
+      "http://172.16.10.201:8000/api/teams/top/active/daily?limit=10"
     );
     if (!teamsResponse.ok) {
       console.error(

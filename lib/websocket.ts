@@ -1,5 +1,5 @@
-import { WebSocketMessage } from "@/types";
-import { gameEvents } from "@/lib/eventEmitter";
+import { WebSocketMessage } from '@/types';
+import { gameEvents } from '@/lib/eventEmitter';
 
 class WebSocketClient {
   private ws: WebSocket | null = null;
@@ -12,8 +12,8 @@ class WebSocketClient {
     // Use environment variable with fallback for WebSocket URL
     // Include the /ws path required by NestJS
     this.url =
-      process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost:8000/ws";
-    console.log("WebSocket URL:", this.url);
+      process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8000/ws';
+    console.log('WebSocket URL:', this.url);
   }
 
   connect() {
@@ -22,7 +22,7 @@ class WebSocketClient {
       (this.ws.readyState === WebSocket.OPEN ||
         this.ws.readyState === WebSocket.CONNECTING)
     ) {
-      console.log("WebSocket already connected or connecting");
+      console.log('WebSocket already connected or connecting');
       return;
     }
 
@@ -30,7 +30,7 @@ class WebSocketClient {
     this.ws = new WebSocket(this.url);
 
     this.ws.onopen = () => {
-      console.log("WebSocket Connected");
+      console.log('WebSocket Connected');
       this.reconnectAttempts = 0; // Reset reconnect attempts on successful connection
     };
 
@@ -46,10 +46,10 @@ class WebSocketClient {
         this.reconnectAttempts++;
         const delay = Math.min(
           1000 * Math.pow(2, this.reconnectAttempts),
-          30000
+          30000,
         );
         console.log(
-          `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`
+          `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`,
         );
 
         if (this.reconnectTimeout) {
@@ -61,88 +61,94 @@ class WebSocketClient {
     };
 
     this.ws.onerror = (error) => {
-      console.error("WebSocket Error:", error);
+      console.error('WebSocket Error:', error);
     };
 
     this.ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        console.log("Received message:", data);
+        console.log('Received message:', data);
 
         // Handle different message types
         this.handleIncomingMessage(data);
       } catch (error) {
-        console.error("Error parsing WebSocket message:", error);
+        console.error('Error parsing WebSocket message:', error);
       }
     };
   }
 
   // Handle incoming messages from the server
-  private handleIncomingMessage(message: any) {
+  private async handleIncomingMessage(message: any) {
     // Check if this is a game action message
     if (message.action) {
       switch (message.action) {
-        case "start":
+        case 'start':
           if (message.playerDisplayName) {
-            gameEvents.emit("start", {
+            const teamName = message.teamName || '';
+            gameEvents.emit('start', {
               displayName: message.playerDisplayName,
-              team: { name: message.teamName || "Aigles" },
-              gameName: message.gameName || "",
-              instructions: message.instructions || "",
+              team: { name: teamName },
+              gameName: message.gameName || '',
+              instructions: message.instructions || '',
               timer: message.timer || 20,
             });
           }
           break;
 
-        case "win":
-          if (typeof message.points === "number") {
-            gameEvents.emit("win", message.points);
+        case 'win':
+          if (typeof message.points === 'number') {
+            gameEvents.emit('win', message.points);
+          }
+          break;
+        case 'unauthorized':
+          if (message.message) {
+            gameEvents.emit('unauthorized', { message: message.message });
           }
           break;
 
-        case "end":
-          if (typeof message.points === "number") {
+        case 'end':
+          if (typeof message.points === 'number') {
             // If score is 0, show loss screen, otherwise show win screen
             if (message.points === 0) {
-              gameEvents.emit("loss", message.points);
+              gameEvents.emit('loss', message.points);
             } else {
-              gameEvents.emit("win", message.points);
+              gameEvents.emit('win', message.points);
             }
           }
           break;
 
-        case "loss":
-          if (typeof message.points === "number") {
-            gameEvents.emit("loss", message.points);
+        case 'loss':
+          if (typeof message.points === 'number') {
+            gameEvents.emit('loss', message.points);
           }
           break;
 
-        case "timeUp":
-          if (typeof message.points === "number") {
-            gameEvents.emit("timeUp", message.points);
+        case 'timeUp':
+          if (typeof message.points === 'number') {
+            gameEvents.emit('timeUp', message.points);
           }
           break;
 
-        case "reset":
-          gameEvents.emit("reset", null);
+        case 'reset':
+          gameEvents.emit('reset', null);
           break;
 
-        case "bonus":
-          if (typeof message.points === "number") {
-            gameEvents.emit("bonus", message.points);
+        case 'bonus':
+          if (typeof message.points === 'number') {
+            gameEvents.emit('bonus', message.points);
           }
           break;
 
-        case "custom":
+        case 'custom':
           // Handle custom commands like bonus
-          if (message.command === "bonus") {
+          if (message.command === 'bonus') {
             // Trigger the bonus display in GameInProgress component
             const gameInProgress = document.querySelector(
-              "[data-bonus-trigger]"
+              '[data-bonus-trigger]',
             );
             if (gameInProgress) {
               const bonusButton = gameInProgress.querySelector(
-                "button[data-bonus]"
+                'button[data-bonus]',
               ) as HTMLButtonElement;
               bonusButton?.click();
             }
@@ -159,7 +165,7 @@ class WebSocketClient {
     }
 
     if (this.ws) {
-      this.ws.close(1000, "Normal closure");
+      this.ws.close(1000, 'Normal closure');
       this.ws = null;
     }
   }
@@ -167,7 +173,7 @@ class WebSocketClient {
   // This method is intentionally empty - we don't send messages back
   sendMessage(message: WebSocketMessage) {
     // Do nothing - the app should never send messages
-    console.log("Message sending disabled - app is passive receiver only");
+    console.log('Message sending disabled - app is passive receiver only');
   }
 
   isConnected(): boolean {

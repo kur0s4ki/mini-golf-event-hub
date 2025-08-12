@@ -14,7 +14,7 @@ interface WinScreenProps {
 const WinScreen: React.FC<WinScreenProps> = ({
     className,
     points,
-    playerName = "Player",
+    playerName = "Joueur",
     teamName = "Aigles"
 }) => {
     const [showTrophy, setShowTrophy] = useState(false)

@@ -13,7 +13,7 @@ interface LossScreenProps {
 const LossScreen: React.FC<LossScreenProps> = ({
     className,
     points,
-    playerName = "Player",
+    playerName = "Joueur",
     teamName = "Aigles"
 }) => {
     const [showMessage, setShowMessage] = useState(false)
@@ -85,7 +85,7 @@ const LossScreen: React.FC<LossScreenProps> = ({
                         <div className="relative z-10 w-full flex flex-col items-center">
                             {/* Loss message */}
                             <h1 className="text-white font-badtyp text-7xl mb-4 animate-bounce-slow">
-                                NICE TRY!
+                                DOMMAGE !
                             </h1>
 
                             {/* Player info */}
@@ -122,7 +122,7 @@ const LossScreen: React.FC<LossScreenProps> = ({
                 {/* Countdown message - similar to TimeUpScreen */}
                 <div className="relative z-20 -mt-6 mb-16">
                     <div className="text-white font-badtyp text-xl opacity-80">
-                        Better luck next time!
+                        Plus de chance la prochaine fois !
                     </div>
                 </div>
             </div>

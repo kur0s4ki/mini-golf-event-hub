@@ -19,6 +19,7 @@ export default function Home() {
     const [instructions, setInstructions] = useState<string>("")
     const [timerSeconds, setTimerSeconds] = useState<number>(20)
     const [points, setPoints] = useState<number>(0)
+    const [unauthorizedMessage, setUnauthorizedMessage] = useState<string>("")
 
     useEffect(() => {
         // Connect to WebSocket when component mounts
@@ -34,6 +35,9 @@ export default function Home() {
         // Setup event listeners
         const handleStart = (player: PlayerInfo) => {
             console.log("Game started for player:", player)
+
+            // Clear any unauthorized message when a new game starts
+            setUnauthorizedMessage("")
 
             // Update state
             setPlayerName(player.displayName)
@@ -84,6 +88,11 @@ export default function Home() {
         gameEvents.on("timeUp", handleTimeUp)
         gameEvents.on("reset", handleReset)
         gameEvents.on("bonus", handleBonus)
+        gameEvents.on("unauthorized", ({ message }) => {
+            setUnauthorizedMessage(message || "Badge non autorisé")
+            // Auto hide after 4 seconds
+            setTimeout(() => setUnauthorizedMessage(""), 4000)
+        })
 
         // Cleanup function to remove event listeners
         return () => {
@@ -93,6 +102,7 @@ export default function Home() {
             gameEvents.off("timeUp", handleTimeUp)
             gameEvents.off("reset", handleReset)
             gameEvents.off("bonus", handleBonus)
+            // unauthorized uses anonymous handler above; page unmount resets state anyway
         }
     }, [])
 
@@ -129,9 +139,9 @@ export default function Home() {
     }, [])
 
     return (
-        <div className="h-full">
+        <div className="h-full relative">
             {gameState === "waiting" && (
-                <WaitingScreen />
+                <WaitingScreen unauthorizedMessage={unauthorizedMessage} />
             )}
             {gameState === "playing" && (
                 <GameInProgress
@@ -164,6 +174,8 @@ export default function Home() {
                     teamName={teamName}
                 />
             )}
+
+
 
             {/* Keyboard simulator for development */}
             {/* {process.env.NODE_ENV === 'development' && (

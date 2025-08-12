@@ -1,4 +1,4 @@
-import { PlayerInfo } from "@/types";
+import { PlayerInfo } from '@/types';
 
 type EventsMap = {
   start: PlayerInfo;
@@ -7,6 +7,7 @@ type EventsMap = {
   timeUp: number;
   reset: null;
   bonus: number;
+  unauthorized: { message: string };
 };
 
 class EventEmitter {
@@ -14,7 +15,7 @@ class EventEmitter {
 
   on<K extends keyof EventsMap>(
     event: K,
-    callback: (data: EventsMap[K]) => void
+    callback: (data: EventsMap[K]) => void,
   ) {
     if (!this.events.has(event)) {
       this.events.set(event, []);
@@ -24,7 +25,7 @@ class EventEmitter {
 
   off<K extends keyof EventsMap>(
     event: K,
-    callback: (data: EventsMap[K]) => void
+    callback: (data: EventsMap[K]) => void,
   ) {
     const handlers = this.events.get(event);
     if (handlers) {

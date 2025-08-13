@@ -257,10 +257,10 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
                   "Pinball",
                   "Roller Skate",
                   "Plinko",
-                  "Spiral",
+                  "Roll-Up",
                   "Fortress",
                   "Skee Ball",
-                  "Skycraper"
+                  "Skyscraper"
                 ];
 
                 return (

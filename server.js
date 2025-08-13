@@ -372,7 +372,7 @@ app.get("/team-info/:uid", (req, res) => {
       "Roller-Skate",
       "Skee-Ball",
       "Skyscraper",
-      "Spiral",
+      "Roll-Up",
       "Pinball",
       "Pinko",
     ],

@@ -1,0 +1,20 @@
+{
+  "name": "rs232-badge-server",
+  "version": "1.0.0",
+  "description": "RS232 Badge Reader Server for Mini Golf Event Hub",
+  "main": "rs232-badger.js",
+  "scripts": {
+    "start": "node rs232-badger.js",
+    "nfc": "node nfc-badger.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2",
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {
+    "nfc-pcsc": "^0.8.0"
+  },
+  "keywords": ["rs232", "badge", "websocket", "serial"],
+  "author": "Your Name",
+  "license": "ISC"
+}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Flag, Trophy, Users, Clock } from "lucide-react";
+import { getApiBaseUrl } from '@/lib/config';
 
 // Define types for team info data
 interface GameScore {
@@ -64,7 +65,7 @@ export default function TeamInfoPage({ params }: { params: { uid: string } }) {
     const fetchTeamInfo = async () => {
       try {
         console.log(`Fetching team info for UID: ${params.uid}`);
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://172.16.10.201:8000/api';
+        const apiBaseUrl = await getApiBaseUrl();
         const response = await fetch(`${apiBaseUrl}/players/team-player-info/${params.uid}`);
 
         // Handle HTTP errors

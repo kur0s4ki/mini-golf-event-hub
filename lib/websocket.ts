@@ -1,22 +1,33 @@
 import { WebSocketMessage } from '@/types';
 import { gameEvents } from '@/lib/eventEmitter';
+import { getGameWebSocketUrl } from '@/lib/config';
 
 class WebSocketClient {
   private ws: WebSocket | null = null;
-  private readonly url: string;
+  private url: string | null = null;
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
   private reconnectTimeout: NodeJS.Timeout | null = null;
 
   constructor() {
-    // Use environment variable with fallback for WebSocket URL
-    // Include the /ws path required by NestJS
-    this.url =
-      process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8000/ws';
-    console.log('WebSocket URL:', this.url);
+    this.initializeUrl();
   }
 
-  connect() {
+  private async initializeUrl() {
+    try {
+      this.url = await getGameWebSocketUrl();
+      console.log('Game WebSocket URL:', this.url);
+    } catch (error) {
+      console.error('Failed to get game WebSocket URL:', error);
+      this.url = 'ws://localhost:8000/ws'; // fallback
+    }
+  }
+
+  async connect() {
+    if (!this.url) {
+      await this.initializeUrl();
+    }
+
     if (
       this.ws &&
       (this.ws.readyState === WebSocket.OPEN ||
@@ -27,7 +38,7 @@ class WebSocketClient {
     }
 
     console.log(`Connecting to WebSocket at ${this.url}`);
-    this.ws = new WebSocket(this.url);
+    this.ws = new WebSocket(this.url!);
 
     this.ws.onopen = () => {
       console.log('WebSocket Connected');

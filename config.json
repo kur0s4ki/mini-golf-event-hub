@@ -1,0 +1,9 @@
+{
+  "api": {
+    "baseUrl": "http://172.16.10.201:8000/api"
+  },
+  "websocket": {
+    "gameUrl": "ws://172.16.10.201:8000/ws",
+    "badgeUrl": "ws://localhost:8000"
+  }
+}

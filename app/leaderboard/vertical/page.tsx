@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Flag, Trophy, Calendar, Clock, Users } from "lucide-react"
 import { fetchLeaderboardData, LeaderboardData, TeamScore } from "@/lib/leaderboardService"
 import BadgeDialog from "@/components/badge-dialog"
+import badgeWsClient from "@/lib/badgeWebsocket"
 
 // Function to generate dynamic gradient based on time left
 const getDynamicGradient = (timeLeft: number, initialDuration: number): string => {
@@ -26,6 +28,7 @@ const getDynamicGradient = (timeLeft: number, initialDuration: number): string =
 };
 
 export default function VerticalLeaderboardPage() {
+  const router = useRouter()
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -53,6 +56,29 @@ export default function VerticalLeaderboardPage() {
 
     return () => clearInterval(intervalId)
   }, [])
+
+  // Badge WebSocket connection and event handling
+  useEffect(() => {
+    // Handler for badge scan events
+    const handleBadgeScanned = (badgeId: string) => {
+      console.log(`Badge scanned in leaderboard: ${badgeId}`);
+      // Navigate to team-info page with the badge ID (same as manual dialog)
+      if (badgeId.trim()) {
+        console.log(`Navigating to team-info for badge ID: ${badgeId}`);
+        router.push(`/team-info/${badgeId.trim()}`);
+      }
+    };
+
+    // Connect to badge WebSocket and register event handler
+    badgeWsClient.connect();
+    badgeWsClient.onBadgeScanned(handleBadgeScanned);
+
+    // Cleanup on unmount
+    return () => {
+      badgeWsClient.offBadgeScanned(handleBadgeScanned);
+      badgeWsClient.disconnect();
+    };
+  }, [router])
 
   // Pas besoin de formater le temps car nous utilisons une barre de progression
 

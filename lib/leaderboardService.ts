@@ -15,6 +15,8 @@ export interface LeaderboardData {
   topTeamsYear: TeamScore[];
 }
 
+import { getApiBaseUrl } from '@/lib/config';
+
 // Interface for the raw data from the server
 interface ServerTeamData {
   id: number;
@@ -65,8 +67,7 @@ async function fetchTopTeams(
 
   try {
     console.log(`CLIENT: Fetching top teams for ${period}`);
-    const apiBaseUrl =
-      process.env.NEXT_PUBLIC_API_BASE_URL || "http://172.16.10.201:8000/api";
+    const apiBaseUrl = await getApiBaseUrl();
     const response = await fetch(
       `${apiBaseUrl}/teams/top/${apiPeriod}?limit=3`
     );
@@ -104,8 +105,7 @@ export async function fetchLeaderboardData(): Promise<LeaderboardData> {
 
   try {
     // --- Step 1: Always Fetch Current Games ---
-    const apiBaseUrl =
-      process.env.NEXT_PUBLIC_API_BASE_URL || "http://172.16.10.201:8000/api";
+    const apiBaseUrl = await getApiBaseUrl();
     const teamsResponse = await fetch(
       `${apiBaseUrl}/teams/top/active/daily?limit=10`
     );

@@ -184,7 +184,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
   }));
 
   return (
-    <div className="min-h-screen h-screen w-full bg-black flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen w-full bg-gradient-to-br from-[#4c1d95] via-[#6B43A9] to-[#2e1065] flex flex-col overflow-hidden">
       {/* BARRE DE NAVIGATION */}
       <div
         className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30"
@@ -304,7 +304,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                 <Lightbulb className="w-3 h-3 md:w-5 md:h-5 text-[#FFD166]" />
                 CONSIGNES DE JEU
               </span>
-              <div className="w-full h-[120px] md:h-[180px] bg-black/30 rounded-2xl border border-white/10 shadow-lg">
+              <div className="w-full h-[120px] md:h-[180px] bg-[#E76F51] rounded-2xl border-4 border-white shadow-lg">
                 <div className="w-full h-full flex items-center justify-center px-3 md:px-6 py-3 md:py-6">
                   <p className="text-white font-badtyp text-base md:text-2xl text-center animate-fade-in">
                     {instructions ||

@@ -63,7 +63,7 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className, unauthorizedMe
     }
 
     return (
-        <div className="min-h-screen w-full bg-black flex flex-col">
+        <div className="min-h-screen w-full bg-gradient-to-br from-[#4c1d95] via-[#6B43A9] to-[#2e1065] flex flex-col">
             {/* BARRE DE NAVIGATION */}
             <div className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r from-[#229954] via-[#6B43A9] to-[#FFD166] shadow-lg z-30">
                 <div className="font-badtyp text-3xl md:text-4xl text-white flex items-center gap-3">

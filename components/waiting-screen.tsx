@@ -136,7 +136,7 @@ const WaitingScreen: React.FC<WaitingScreenProps> = ({ className, unauthorizedMe
                         <>
                     <img src="/images/logo.png" alt="Mini Golf" className="w-[200px] h-auto object-contain mb-2" style={{ filter: 'drop-shadow(0px 4px 8px rgba(216, 114, 77, 0.2))' }} />
                     <span className="text-white font-badtyp text-2xl md:text-3xl text-center">En attente de joueurs...</span>
-                    <span className="text-[#FFD166] font-badtyp text-lg md:text-xl text-center mt-2">Placez votre balle sur la zone violette pour démarrer la partie !</span>
+                    <span className="text-[#FFD166] font-badtyp text-lg md:text-xl text-center mt-2">Placez votre balle sur la zone blanche pour démarrer la partie !</span>
                     <button
                         onClick={handleStartClick}
                         className="mt-6 bg-[#229954] text-white font-badtyp text-xl md:text-2xl px-8 py-4 rounded-xl border-4 border-white shadow-[0_6px_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-all"

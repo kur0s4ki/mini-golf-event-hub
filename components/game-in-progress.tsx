@@ -184,10 +184,10 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
   }));
 
   return (
-    <div className="min-h-screen h-screen w-full bg-gradient-to-br bg-[#FFA500] flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen w-full bg-gradient-to-br bg-[#FF6600] flex flex-col overflow-hidden">
       {/* BARRE DE NAVIGATION */}
       <div
-        className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r bg-[#FFA500] border-b-4 border-[#FFD166] shadow-lg z-30"
+        className="w-full flex items-center justify-between px-12 py-5 md:py-5 bg-gradient-to-r bg-[#FF6600] border-b-4 border-[#FFD166] shadow-lg z-30"
         style={{ flex: "0 0 auto" }}
       >
         <div className="font-badtyp text-2xl md:text-4xl text-white flex items-center gap-2 md:gap-3">
@@ -269,7 +269,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
         {!showBonus && (
           <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-2 md:gap-4 bg-black/70 rounded-2xl border-4 border-[#FFD166] shadow-2xl px-4 md:px-10 py-5 md:py-8 mt-4 mb-4 md:mt-6 md:mb-6 h-auto">
             {/* Team Name Sticker - Enhanced visibility */}
-            <div className="absolute right-0 top-0 transform rotate-6 bg-[#E76F51] px-4 md:px-6 py-2 md:py-3 rounded-lg border-4 border-white shadow-xl z-50">
+            <div className="absolute right-0 top-0 transform rotate-6 bg-[#229954] px-4 md:px-6 py-2 md:py-3 rounded-lg border-4 border-white shadow-xl z-50">
               <div className="flex flex-col items-center">
                 <span className="text-white font-badtyp text-xs md:text-sm uppercase tracking-wider">
                   ÉQUIPE
@@ -304,7 +304,7 @@ const GameInProgress: React.FC<GameInProgressProps> = ({
                 <Lightbulb className="w-3 h-3 md:w-5 md:h-5 text-[#FFD166]" />
                 CONSIGNES DE JEU
               </span>
-              <div className="w-full h-[120px] md:h-[180px] bg-[#FFA500]/30 rounded-2xl border-4 border-white shadow-lg">
+              <div className="w-full h-[120px] md:h-[180px] bg-[#FF6600]/30 rounded-2xl border-4 border-white shadow-lg">
                 <div className="w-full h-full flex items-center justify-center px-3 md:px-6 py-3 md:py-6">
                   <p className="text-white font-badtyp text-base md:text-2xl text-center animate-fade-in">
                     {instructions ||
